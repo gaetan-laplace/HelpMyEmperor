@@ -30,8 +30,3 @@ Designed as a lightweight static app with zero heavy backend requirements:
 
 ## 🚀 Quick Start & Deployment
 
-### Run Locally
-1. Clone the repository:
-   ```bash
-   git clone git@github.com:gaetan-laplace/Sector2401.git
-   cd Sector2401
