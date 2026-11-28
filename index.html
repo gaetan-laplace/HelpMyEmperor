@@ -102,6 +102,10 @@
                     <i data-lucide="menu" class="w-4 h-4 text-royalGold"></i>
                     <span>Civilisations (25)</span>
                 </button>
+                <button id="btn-open-loading-screen" class="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-gradient-to-r from-amber-600/25 to-royalGold/25 hover:from-amber-600/35 hover:to-royalGold/35 border border-royalGold/60 text-sm font-semibold text-royalGoldLight transition shadow-sm">
+                    <i data-lucide="swords" class="w-4 h-4 text-royalGold"></i>
+                    <span>Écran de Chargement</span>
+                </button>
                 <button id="btn-open-compare" class="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-slateCard hover:bg-slateHover border border-slate-700/90 hover:border-royalBlue/60 text-sm font-medium text-slate-200 transition">
                     <i data-lucide="scale" class="w-4 h-4 text-royalBlue"></i>
                     <span class="hidden sm:inline">Comparateur</span>
@@ -109,6 +113,22 @@
             </div>
         </div>
     </header>
+
+    <!-- BANNIÈRE ACCÈS RAPIDE MODE ÉCRAN DE CHARGEMENT -->
+    <div class="bg-slateCard/60 border-b border-slate-800/80 px-4 lg:px-8 py-2.5">
+        <div class="max-w-[1600px] mx-auto flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-2 text-xs sm:text-sm text-slate-300">
+                <span class="inline-flex items-center justify-center w-6 h-6 rounded-md bg-royalGold/15 text-royalGold border border-royalGold/30">
+                    <i data-lucide="zap" class="w-3.5 h-3.5"></i>
+                </span>
+                <span>En file classée ou sur l'écran de chargement ? Préparez votre plan en 30 secondes :</span>
+            </div>
+            <button onclick="openLoadingScreenModal(state.selectedCivId)" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slateDeep hover:bg-slateHover border border-royalGold/40 text-xs font-semibold text-royalGoldLight transition">
+                <span>Mode Écran de Chargement : Ma Civ vs Adversaire</span>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </button>
+        </div>
+    </div>
 
     <!-- MAIN WORKSPACE -->
     <div class="flex-1 max-w-[1600px] w-full mx-auto flex relative">
@@ -225,6 +245,10 @@
                         <div id="civ-stats-bars" class="space-y-2 text-xs">
                             <!-- Barres générées en JS -->
                         </div>
+                        <button onclick="openLoadingScreenModal(state.selectedCivId)" class="w-full mt-2 py-2 px-3 rounded-lg bg-royalGold/15 hover:bg-royalGold/25 border border-royalGold/40 text-xs font-semibold text-royalGoldLight flex items-center justify-center gap-1.5 transition">
+                            <i data-lucide="shield-alert" class="w-3.5 h-3.5"></i>
+                            <span>Préparer un Matchup</span>
+                        </button>
                     </div>
                 </div>
             </section>
@@ -267,6 +291,62 @@
             </div>
 
         </main>
+    </div>
+
+    <!-- MODAL MODE ÉCRAN DE CHARGEMENT : MA CIV VS ADVERSAIRE -->
+    <div id="loading-screen-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-3 sm:p-5">
+        <div class="bg-slateCard border border-royalGold/40 rounded-2xl max-w-6xl w-full max-h-[92vh] flex flex-col shadow-2xl overflow-hidden animate-fade-in gold-border-glow">
+            <!-- Header Modal -->
+            <div class="p-4 sm:p-5 border-b border-slate-800 flex items-center justify-between bg-slateDeep">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-royalGold/15 border border-royalGold/40 flex items-center justify-center text-royalGold">
+                        <i data-lucide="swords" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-display text-base sm:text-lg font-bold text-white flex items-center gap-2">
+                            MODE ÉCRAN DE CHARGEMENT <span class="text-[11px] font-sans font-semibold px-2 py-0.5 rounded bg-emeraldAccent/15 text-emeraldAccent border border-emeraldAccent/30">BRIEFING 30 SEC</span>
+                        </h3>
+                        <p class="text-xs text-slate-400">Plan de jeu instantané, menaces adverses, contres prioritaires et frise des timings</p>
+                    </div>
+                </div>
+                <button id="btn-close-loading-screen" class="p-2 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- Sélecteurs Ma Civ vs Adversaire -->
+            <div class="p-4 sm:p-5 bg-slateDeep/60 border-b border-slate-800">
+                <div class="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] items-end gap-3 sm:gap-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-emeraldAccent mb-1.5 flex items-center gap-1.5">
+                            <i data-lucide="shield" class="w-3.5 h-3.5"></i>
+                            <span>Ma Civilisation</span>
+                        </label>
+                        <select id="ls-select-my-civ" class="w-full p-2.5 sm:p-3 rounded-xl bg-slateDeep border border-emeraldAccent/40 text-sm font-medium text-white focus:border-emeraldAccent outline-none"></select>
+                    </div>
+
+                    <div class="flex justify-center">
+                        <button id="btn-swap-ls-civs" class="px-3.5 py-2.5 rounded-xl bg-slateCard hover:bg-slateHover border border-slate-700 text-xs font-semibold text-slate-200 flex items-center gap-1.5 transition" title="Inverser les civilisations">
+                            <i data-lucide="arrow-left-right" class="w-4 h-4 text-royalGold"></i>
+                            <span>Inverser</span>
+                        </button>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-crimsonAccent mb-1.5 flex items-center gap-1.5">
+                            <i data-lucide="skull" class="w-3.5 h-3.5"></i>
+                            <span>Civilisation Adversaire</span>
+                        </label>
+                        <select id="ls-select-enemy-civ" class="w-full p-2.5 sm:p-3 rounded-xl bg-slateDeep border border-crimsonAccent/40 text-sm font-medium text-white focus:border-crimsonAccent outline-none"></select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Corps du Briefing Tactique -->
+            <div id="loading-screen-content" class="p-4 sm:p-6 overflow-y-auto space-y-6">
+                <!-- Généré dynamiquement par JS -->
+            </div>
+        </div>
     </div>
 
     <!-- MODAL COMPARATEUR DE CIVILISATIONS -->
@@ -2277,701 +2357,395 @@
         ];
 
         // =========================================================================
-        // BASE DE DONNÉES DES PASSAGES D'ÂGE (MONUMENTS, COMMANDERIES, AILES, DYNASTIES)
+        // BASE DE DONNÉES DES TIMINGS CRITIQUES, POWER SPIKES & SCOUTING (25 CIVS)
         // =========================================================================
-        const AGE_UPS_DATA = {
+        const CIV_TIMINGS_DATA = {
             english: {
-                mechanicLabel: "Monuments Classiques (2 choix par âge construits par les villageois)",
-                specialNote: "Tous les monuments anglais activent l'aura défensive Réseau de Châteaux (+20% à +40% de vitesse d'attaque aux unités alliées proches).",
-                stages: [
-                    {
-                        age: "Âge I → Âge II (Féodal)",
-                        options: [
-                            { id: "council_hall", name: "Salle du Conseil (Council Hall)", tag: "Tempo / Agression", color: "crimson", unlocks: ["Agit comme 2 Camps de Tir à l'Arc produisant des Archers Longs 100% plus vite", "Débloque les technologies uniques d'Archers Longs dès l'Âge II"], advantage: "Permet d'exercer une pression immédiate dès 4:30 sans dépenser de bois dans des bâtiments militaires.", whenToPick: "Standard dans 80% des parties pour contrôler la carte ou punir un boom économique." },
-                            { id: "abbey_kings", name: "Abbaye des Rois (Abbey of Kings)", tag: "Soin & Contrôle Map", color: "emerald", unlocks: ["Débloque l'unité unique Roi (cavalerie lourde gratuite initiale + aura de soin)", "Soigne toutes les unités alliées hors combat dans un large rayon"], advantage: "Le Roi permet de harceler les villageois adverses dès 4:30 tout en soignant vos troupes entre chaque escarmouche.", whenToPick: "Pour un jeu mobile à base de cavalerie ou pour préparer un Fast Castle sécurisé." }
-                        ]
-                    },
-                    {
-                        age: "Âge II → Âge III (Châteaux)",
-                        options: [
-                            { id: "white_tower", name: "Tour Blanche (White Tower)", tag: "Défense & Production", color: "blue", unlocks: ["Agit comme un Donjon complet avec meurtrières et garnison", "Produit toutes les unités militaires et engins de siège 100% plus vite"], advantage: "Verrouille instantanément le centre de la carte ou votre base principale tout en doublant la cadence de sortie des Chevaliers ou Mangonneaux.", whenToPick: "Contre une pression ennemie forte ou pour ancrer une position centrale." },
-                            { id: "kings_palace", name: "Palais du Roi (King's Palace)", tag: "Boom Éco", color: "emerald", unlocks: ["Agit comme un Forum complet (produit des villageois et sert de point de dépôt)", "Économise 400 bois et 350 pierre"], advantage: "Permet d'enchaîner un boom économique à 2 ou 3 Forums dès l'arrivée à l'Âge des Châteaux.", whenToPick: "Lorsque la carte est calme ou que vous avez déjà l'avantage territorial." }
-                        ]
-                    },
-                    {
-                        age: "Âge III → Âge IV (Impérial)",
-                        options: [
-                            { id: "berkshire", name: "Palais de Berkshire", tag: "Contrôle Map", color: "crimson", unlocks: ["Super-Donjon doté de 15 emplacements d'archers et d'une portée portée à 14 cases", "Active l'aura maximale du Réseau de Châteaux (+40% vitesse d'attaque)"], advantage: "Interdit totalement une zone entière de la carte (Sites Sacrés, mines d'or ou passage étroit).", whenToPick: "Pour verrouiller la victoire sur les Sites Sacrés ou protéger un flanc critique." },
-                            { id: "wynguard", name: "Palais de Wynguard", tag: "Militaire / Armées", color: "amber", unlocks: ["Permet de recruter des armées pré-assemblées à prix réduit (Armée Wynguard, Rôdeurs, Pillards, Trébuchets)"], advantage: "Offre un rapport coût/puissance imbattable en fin de partie et permet de remobiliser une armée complète en quelques secondes.", whenToPick: "Dans les longues parties d'attrition où l'or et le bois doivent être optimisés." }
-                        ]
-                    }
+                archetype: "Contrôle Défensif / Push Féodal Longbows",
+                primaryThreat: "Push précoce Archers Longs + Lanciers + Béliers dès 4:45 soutenu par l'aura Réseau de Châteaux (+20% cadence de tir).",
+                threatWindow: "4:30 — 8:30 (Féodal) & 18:00+ (Enclos Impériaux)",
+                recommendedCounterPlan: {
+                    unitPriority: "Cavaliers légers + Archers en début de partie, puis Chevaliers + Mangonneaux dès l'Âge III.",
+                    upgradePriority: "Priorité absolue : +1 Défense à distance à la Forge dès 4:30.",
+                    winCondition: "Encaissez le premier assaut féodal sans perdre de villageois, puis prenez l'avantage économique ou technologique (Âge III) pendant que l'Anglais investit du bois dans ses fermes."
+                },
+                events: [
+                    { time: "3:30", startPct: 14, widthPct: 10, type: "scout", label: "Repère Scout 3:30", title: "Vérifier Salle du Conseil vs Abbaye des Rois", detail: "Si Salle du Conseil : attendez-vous à des Archers Longs sur votre bois/or dès 4:45. Si Abbaye des Rois : un Roi va harceler vos villageois isolés." },
+                    { time: "4:45", startPct: 22, widthPct: 20, type: "spike", label: "Power Spike 4:45–8:30", title: "Double production d'Archers Longs + Avant-poste avancé", detail: "Pic de puissance féodal majeur : les Archers Longs sortent deux fois plus vite et gagnent +20% vitesse d'attaque près des avant-postes." },
+                    { time: "7:30", startPct: 36, widthPct: 16, type: "vuln", label: "Vulnérabilité 7:30–10:00", title: "Transition massive vers les Fermes", detail: "L'Anglais dépense tout son bois autour des Moulins pour poser ses fermes : sa production militaire ralentit temporairement." },
+                    { time: "12:00", startPct: 58, widthPct: 18, type: "spike", label: "Power Spike 12:00–15:00", title: "Verrouillage Tour Blanche / Palais du Roi", detail: "Contrôle territorial très fort à l'Âge III avec Hommes d'armes améliorés et Trébuchets." },
+                    { time: "18:00+", startPct: 82, widthPct: 18, type: "spike", label: "Power Spike 18:00+", title: "Enclos Agricoles & Palais de Berkshire", detail: "Génération infinie d'or via les fermes et contrôle quasi imprenable de la carte." }
                 ]
             },
             french: {
-                mechanicLabel: "Monuments Classiques (2 choix par âge construits par les villageois)",
-                specialNote: "Les Forums français produisent les villageois plus vite (+10% à +20%) quel que soit le monument choisi.",
-                stages: [
-                    {
-                        age: "Âge I → Âge II (Féodal)",
-                        options: [
-                            { id: "school_cavalry", name: "École de Cavalerie (School of Cavalry)", tag: "Tempo / Cavalerie", color: "crimson", unlocks: ["Agit comme une Écurie produisant des Chevaliers Royaux 20% plus vite", "Débloque l'amélioration Chevalerie (régénération de PV)"], advantage: "Offre le pic de puissance le plus redoutable d'AoE4 à 4:35 avec un Chevalier Royal immédiat.", whenToPick: "Choix par défaut pour dicter le tempo et harceler l'économie adverse." },
-                            { id: "chamber_commerce", name: "Chambre de Commerce", tag: "Boom Éco / Commerce", color: "emerald", unlocks: ["Agit comme un Marché et octroie un Marchand gratuit pour chaque technologie économique recherchée"], advantage: "Génère jusqu'à 6 à 8 Marchands totalement gratuits dès l'Âge II grâce aux technologies 30% moins chères.", whenToPick: "Sur cartes fermées (Black Forest, Altai) ou en parties d'équipe (2v2, 3v3, 4v4)." }
-                        ]
-                    },
-                    {
-                        age: "Âge II → Âge III (Châteaux)",
-                        options: [
-                            { id: "royal_institute", name: "Institut Royal (Royal Institute)", tag: "Tech / Power Spike", color: "amber", unlocks: ["Permet de rechercher les technologies uniques françaises (Selles Royales, Arbalètes, Chevalerie) un âge plus tôt et 20% moins cher"], advantage: "Donne aux Chevaliers Royaux +30% de dégâts de charge dès l'Âge III, écrasant les défenses ennemies.", whenToPick: "Pour un assaut décisif à l'Âge des Châteaux avant que l'adversaire n'atteigne l'Impérial." },
-                            { id: "guild_hall", name: "Hôtel des Corporations (Guild Hall)", tag: "Boom Éco", color: "emerald", unlocks: ["Génère passivement de la nourriture, du bois, de l'or ou de la pierre à taux croissant selon le stock accumulé"], advantage: "Constitue une réserve stratégique colossale pour financer instantanément le passage à l'Âge IV ou une armée.", whenToPick: "Quand la partie s'oriente vers un duel prolongé ou sur des cartes pauvres en or/pierre." }
-                        ]
-                    },
-                    {
-                        age: "Âge III → Âge IV (Impérial)",
-                        options: [
-                            { id: "red_palace", name: "Palais Rouge (Red Palace)", tag: "Défense & Contrôle", color: "crimson", unlocks: ["Donjon d'élite équipé d'emplacements d'arbalètes infligeant des dégâts massifs", "Ajoute des arbalètes à tous vos Forums et Donjons"], advantage: "Rend votre base quasi imprenable contre les raids de fin de partie et sécurise les ressources finales.", whenToPick: "Contre des adversaires très mobiles ou pour verrouiller un point névralgique." },
-                            { id: "college_artillery", name: "Collège d'Artillerie", tag: "Poudre & Siège", color: "blue", unlocks: ["Produit des unités d'artillerie Royale (Canons, Couleuvrines, Ribaudequins) avec +20% de dégâts", "Débloque l'Artillerie de Campagne"], advantage: "Les Canons Royaux n'ont aucun temps de déploiement et détruisent instantanément les châteaux et mangonneaux ennemis.", whenToPick: "Pour percer les lignes fortifiées ennemies à l'Âge Impérial." }
-                        ]
-                    }
+                archetype: "Agression Cavalerie Lourde & Tempo",
+                primaryThreat: "Arrivée du premier Chevalier Royal à 4:35 sur votre or ou bois, suivie d'un duo Chevaliers + Archers.",
+                threatWindow: "4:35 — 9:30 (Raids Chevaliers Royaux)",
+                recommendedCounterPlan: {
+                    unitPriority: "Lanciers en défense immédiate sur l'or/bois (3-4 lanciers avant 4:40), puis Arbalétriers + Lanciers à l'Âge III.",
+                    upgradePriority: "Brouette +1 Défense à distance (contre les archers d'accompagnement) et Phalange/Piques.",
+                    winCondition: "Muraillez les accès latéraux avec des palissades courtes entre les bois, ne perdez aucun villageois aux raids, et punissez le mono-Forum français en milieu de partie."
+                },
+                events: [
+                    { time: "3:30", startPct: 14, widthPct: 10, type: "scout", label: "Repère Scout 3:30", title: "3+ mineurs sur l'Or = École de Cavalerie", detail: "Posez immédiatement une Caserne dès 3:45 pour avoir vos deux premiers Lanciers prêts à 4:35." },
+                    { time: "4:35", startPct: 21, widthPct: 24, type: "spike", label: "Power Spike 4:35–9:30", title: "Raids de Chevaliers Royaux + Régénération", detail: "Fenêtre la plus dangereuse : les Chevaliers Royaux encaissent les flèches de Forum et se soignent entre deux raids." },
+                    { time: "8:30", startPct: 42, widthPct: 16, type: "vuln", label: "Vulnérabilité 8:30–11:00", title: "Transition vers l'Âge III ou 2e Forum", detail: "Après la vague féodale, le Français doit ralentir sa production de chevaliers pour économiser 1200 nourriture / 600 or." },
+                    { time: "13:00", startPct: 64, widthPct: 20, type: "spike", label: "Power Spike 13:00–17:00", title: "Chevaliers d'Élite + Arbalétriers Pavois", detail: "Composition très difficile à briser en combat rangé avec les technologies de l'Institut Royal." }
                 ]
             },
             hre: {
-                mechanicLabel: "Monuments Classiques (2 choix par âge construits par les villageois)",
-                specialNote: "La garnison d'une Relique dans un Donjon, Avant-poste ou Monument active des bonus défensifs et économiques uniques.",
-                stages: [
-                    {
-                        age: "Âge I → Âge II (Féodal)",
-                        options: [
-                            { id: "aachen_chapel", name: "Chapelle d'Aix-la-Chapelle", tag: "Boom Éco", color: "emerald", unlocks: ["Diffuse l'inspiration d'un Prélat en garnison (+35% récolte) dans un immense rayon autour du bâtiment"], advantage: "Un seul Prélat inspire jusqu'à 30 villageois simultanément, propulsant le passage à l'Âge III vers 7:15.", whenToPick: "Dans 90% des parties lorsque vos ressources de départ sont suffisamment groupées." },
-                            { id: "meinwerk_palace", name: "Palais de Meinwerk", tag: "Tempo / Militaire", color: "crimson", unlocks: ["Agit comme un Forgeron avec recherches 40% plus rapides et moins chères", "Débloque des technologies militaires uniques (Acier de Zornhau, Rivets)"], advantage: "Renforce considérablement les Hommes d'armes et Lanciers pour mener une agression féodale soutenue.", whenToPick: "Si vos ressources sont trop dispersées pour Aix-la-Chapelle ou contre un rush all-in." }
-                        ]
-                    },
-                    {
-                        age: "Âge II → Âge III (Châteaux)",
-                        options: [
-                            { id: "regnitz", name: "Cathédrale de Regnitz", tag: "Or Infini / Reliques", color: "amber", unlocks: ["Accueille jusqu'à 2 Reliques générant chacune +100% d'or supplémentaire (160 or/min par relique)"], advantage: "Assure un flux d'or passif équivalent à 8-10 mineurs sans occuper de population.", whenToPick: "Dès que vous avez sécurisé ou pouvez contester au moins 2 Reliques sur la carte." },
-                            { id: "burgrave_palace", name: "Palais de Burgrave", tag: "Tempo / Submersion", color: "crimson", unlocks: ["Agit comme 5 Casernes réunies produisant l'infanterie par lots de 5 à vitesse éclair"], advantage: "Permet d'inonder la base ennemie d'Hommes d'armes améliorés à la 8e minute avant que l'adversaire n'ait d'arbalétriers.", whenToPick: "Si les Reliques sont inaccessibles ou pour punir un adversaire qui boom sur 2 Forums." }
-                        ]
-                    },
-                    {
-                        age: "Âge III → Âge IV (Impérial)",
-                        options: [
-                            { id: "palace_swabia", name: "Palais de Souabe", tag: "Boom Éco Ultime", color: "emerald", unlocks: ["Agit comme un Forum produisant des villageois 75% moins cher et 75% plus vite"], advantage: "Permet de passer de 50 à 120 villageois en moins de 3 minutes et de reconstruire toute son économie après un raid.", whenToPick: "Le choix privilégié dans la majorité des parties pour écraser l'adversaire économiquement." },
-                            { id: "elzbach_palace", name: "Palais d'Elzbach", tag: "Défense Ultime", color: "blue", unlocks: ["Forteresse massive réduisant de 33% les dégâts subis par tous les bâtiments dans sa zone d'influence"], advantage: "Verrouille une position clé ou protège une Merveille/Site Sacré contre les bombardes ennemies.", whenToPick: "Sur cartes fermées (Black Forest) ou pour défendre une victoire aux Sites Sacrés." }
-                        ]
-                    }
+                archetype: "Fast Castle Économique & Contrôle des Reliques",
+                primaryThreat: "Passage Âge III éclair vers 7:15 avec la Cathédrale de Regnitz pour rafler toutes les Reliques et masser des Hommes d'armes.",
+                threatWindow: "7:30 — 13:00 (Reliques & Hommes d'armes améliorés)",
+                recommendedCounterPlan: {
+                    unitPriority: "Cavalerie légère ou Archers dès 5:00 pour harceler l'or et les Prélats, puis Arbalétriers + Mangonneaux à l'Âge III.",
+                    upgradePriority: "Attaque à distance (+1/+2) pour percer la haute armure des Hommes d'armes du SERG.",
+                    winCondition: "Pressionnez l'or du SERG avant 6:30 pour retarder Regnitz, et placez une unité militaire ou une tour sur 2 ou 3 Reliques pour bloquer ses Prélats."
+                },
+                events: [
+                    { time: "3:30", startPct: 14, widthPct: 10, type: "scout", label: "Repère Scout 3:30", title: "Chapelle d'Aix-la-Chapelle + 4-5 sur l'Or", detail: "Confirme un Fast Castle pur sans armée féodale : vous avez le champ libre pour agresser son or." },
+                    { time: "4:30", startPct: 20, widthPct: 18, type: "vuln", label: "Vulnérabilité 4:30–7:30", title: "Aucune armée pendant le Fast Castle", detail: "Le SERG investit toutes ses ressources dans le passage à l'Âge III : harcelez les villageois exposés et les Prélats." },
+                    { time: "7:30", startPct: 37, widthPct: 24, type: "spike", label: "Power Spike 7:30–13:00", title: "Cathédrale de Regnitz + Hommes d'armes / Landsknechte", detail: "Pic de puissance massif : or passif énorme et infanterie lourde dévastatrice." },
+                    { time: "16:00+", startPct: 78, widthPct: 22, type: "spike", label: "Power Spike 16:00+", title: "Palais de Souabe (Boom 120 villageois)", detail: "Remobilisation économique quasi instantanée en fin de partie." }
                 ]
             },
             rus: {
-                mechanicLabel: "Monuments Classiques (2 choix par âge construits par les villageois)",
-                specialNote: "Les paliers de Prime de Chasse (100 / 250 / 500) augmentent la récolte de nourriture et l'or des Cabanes de Chasse indépendamment des monuments.",
-                stages: [
-                    {
-                        age: "Âge I → Âge II (Féodal)",
-                        options: [
-                            { id: "kremlin", name: "Le Kremlin", tag: "Défense & Milice", color: "blue", unlocks: ["Forteresse en bois améliorée dotée de meurtrières et d'un bonus de bois +20%", "Permet d'invoquer temporairement des Miliciens paysans pour défendre ou attaquer"], advantage: "Sécurise un sanglier ou une forêt exposée tout en offrant une défense gratuite contre les raids féodaux.", whenToPick: "Standard sur la quasi-totalité des cartes terrestres." },
-                            { id: "golden_gate", name: "Porte d'Or (Golden Gate)", tag: "Économie & Commerce", color: "emerald", unlocks: ["Génère des tickets d'échange permettant d'échanger 100 ressources contre 150 d'une autre ressource au choix"], advantage: "Offre une flexibilité économique immédiate (notamment pour acheter de la pierre pour un 2e Forum ou de l'or pour l'Âge III).", whenToPick: "Sur cartes hybrides/navales ou pour un Fast Castle rapide." }
-                        ]
-                    },
-                    {
-                        age: "Âge II → Âge III (Châteaux)",
-                        options: [
-                            { id: "abbey_trinity", name: "Abbaye de la Trinité", tag: "Reliques & Tech", color: "amber", unlocks: ["Produit des Moines Guerriers à moitié prix", "Débloque des technologies religieuses uniques renforçant la bénédiction en combat"], advantage: "Permet de rafler rapidement les Reliques sur toute la carte grâce aux Moines Guerriers montés.", whenToPick: "Sur cartes ouvertes où les Moines Guerriers peuvent contestent les Reliques et soutenir les Chevaliers." },
-                            { id: "high_trade_house", name: "Haute Maison de Commerce", tag: "Boom Éco", color: "emerald", unlocks: ["Agit comme une Cabane de Chasse géante générant de l'or passif et faisant apparaître des Cerfs toutes les 60s"], advantage: "Assure un revenu d'or infini et une source constante de nourriture sous votre Forum.", whenToPick: "Sur cartes fermées ou pauvres en faune sauvage." }
-                        ]
-                    },
-                    {
-                        age: "Âge III → Âge IV (Impérial)",
-                        options: [
-                            { id: "spasskaya_tower", name: "Tour Spasskaya", tag: "Défense & Murs", color: "blue", unlocks: ["Super-Forteresse équipée de canons et meurtrières", "Débloque la construction des Murs en Pierre pour les Rus'"], advantage: "Comble l'unique faiblesse défensive des Rus' en fin de partie en débloquant enfin les remparts en pierre.", whenToPick: "Dans les parties longues nécessitant de sécuriser les flancs." },
-                            { id: "high_armory", name: "Haute Armurerie", tag: "Siège & Poudre", color: "crimson", unlocks: ["Réduit de 20% le coût de tous les engins de siège dans les ateliers proches", "Débloque des améliorations uniques d'artillerie (Rechargement rapide des EsSpringales/Bombardes)"], advantage: "Permet de dominer les batailles d'artillerie à l'Âge Impérial avec des EsSpringales à portée maximale.", whenToPick: "Pour soutenir vos Streltsy avec une artillerie supérieure." }
-                        ]
-                    }
+                archetype: "Contrôle de Chasse & Cavalerie Polyvalente",
+                primaryThreat: "Chevaliers Rus' dès 4:40 combinés à une économie de bois massive (+20%) et une course rapide aux Reliques.",
+                threatWindow: "4:40 — 9:00 & 17:00+ (Streltsy + Artillerie)",
+                recommendedCounterPlan: {
+                    unitPriority: "Contester les loups/cerfs dès 1:30 avec votre éclaireur, puis Lanciers + Archers/Arbalétriers.",
+                    upgradePriority: "Améliorations de récolte de bois et défense à distance.",
+                    winCondition: "Tuez les loups et rabattez vos cerfs tôt pour priver le Rus' de sa Prime de Chasse (palier 500), puis punissez l'absence de murs en pierre en fin de partie."
+                },
+                events: [
+                    { time: "1:30", startPct: 6, widthPct: 12, type: "scout", label: "Repère Scout 1:30", title: "2-3 Éclaireurs Rus' sur la carte", detail: "Tuez les loups et cerfs proches de votre base avant eux pour limiter leur Prime de Chasse." },
+                    { time: "4:40", startPct: 22, widthPct: 20, type: "spike", label: "Power Spike 4:40–9:00", title: "Chevaliers Rus' + Milice du Kremlin", detail: "Forte pression mobile soutenue par une production de bois supérieure." },
+                    { time: "9:30", startPct: 46, widthPct: 16, type: "vuln", label: "Vulnérabilité 9:30–12:00", title: "Transition fermes & Absence de murs en pierre", detail: "Une fois le gibier épuisé, les flancs rus sont vulnérables aux raids rapides." },
+                    { time: "17:00+", startPct: 82, widthPct: 18, type: "spike", label: "Power Spike 17:00+", title: "Masse de Streltsy + Haute Armurerie", detail: "Puissance de feu et portée d'artillerie redoutables en fin de partie." }
                 ]
             },
             chinese: {
-                mechanicLabel: "Système Double : 1 Monument = Passage d'Âge | Les 2 Monuments d'un même âge = Activation de la Dynastie",
-                specialNote: "Vous pouvez revenir construire le 2e monument d'un âge précédent à tout moment pour activer sa Dynastie et débloquer son bâtiment et son unité unique.",
-                dynasties: [
-                    { name: "Dynastie Tang (Départ)", req: "Active dès le début de la partie", bonus: "Éclaireurs +30% ligne de vision et +10% vitesse de déplacement." },
-                    { name: "Dynastie Song (Âge II)", req: "Académie Impériale + Barbacane du Soleil", bonus: "Temps de formation des villageois réduit de -35% • Débloque le Grenier et le Zhuge Nu." },
-                    { name: "Dynastie Yuan (Âge III)", req: "Tour de l'Horloge + Palais Impérial", bonus: "Vitesse de déplacement de toutes les unités +15% • Débloque la Pagode et le Lancier Feu." },
-                    { name: "Dynastie Ming (Âge IV)", req: "Grande Muraille + Enclave de l'Esprit", bonus: "Points de vie de toutes les unités militaires +10% • Débloque le Grenadier." }
-                ],
-                stages: [
-                    {
-                        age: "Âge I → Âge II (Féodal)",
-                        options: [
-                            { id: "imperial_academy", name: "Académie Impériale", tag: "Boom Éco / Impôts", color: "emerald", unlocks: ["Double la génération d'impôts des bâtiments dans son rayon", "Permet de former des Officiers Impériaux directement"], advantage: "Génère d'énormes quantités d'or passif dès l'Âge II pour financer le 2e monument (Dynastie Song).", whenToPick: "Presque toujours en premier monument pour maximiser l'économie." },
-                            { id: "barbican_sun", name: "Barbacane du Soleil", tag: "Défense & Contrôle", color: "blue", unlocks: ["Avant-poste fortifié équipé d'un canon à main longue portée dès l'Âge II"], advantage: "Verrouille vos ressources exposées ou bloque l'accès à votre base pendant que vous développez la Dynastie Song.", whenToPick: "En 1er contre un rush agressif (Français, Mongols), sinon en 2e pour activer la Dynastie Song." }
-                        ]
-                    },
-                    {
-                        age: "Âge II → Âge III (Châteaux)",
-                        options: [
-                            { id: "astronomical_clocktower", name: "Tour de l'Horloge Astronomique", tag: "Siège d'Élite", color: "crimson", unlocks: ["Produit des engins de siège (Nids d'Abeilles, EsSpringales) avec +50% de points de vie"], advantage: "Vos Nids d'Abeilles survivent aux tirs de contre-batterie ennemis et dominent tous les combats de milieu de partie.", whenToPick: "Choix prioritaire à l'Âge III pour soutenir vos Zhuge Nu et Lanciers." },
-                            { id: "imperial_palace", name: "Palais Impérial", tag: "Renseignement & Vision", color: "amber", unlocks: ["Capacité active révélant tous les villageois ennemis sur toute la carte pendant 15 secondes"], advantage: "Permet de repérer instantanément les expansions secrètes et d'activer la Dynastie Yuan (+15% vitesse) si combiné avec la Tour de l'Horloge.", whenToPick: "En 2e monument Âge III pour débloquer la Dynastie Yuan et les Pagodes." }
-                        ]
-                    },
-                    {
-                        age: "Âge III → Âge IV (Impérial)",
-                        options: [
-                            { id: "spirit_way", name: "Voie des Esprits (Spirit Way)", tag: "Militaire / Dynastie", color: "amber", unlocks: ["Réduit de 30% le coût des unités dynastiques (Zhuge Nu, Lanciers Feu, Grenadiers) et soigne les alliés à la mort d'une unité dynastique"], advantage: "Rend vos armées mixtes dynastiques quasi impossibles à battre en combat prolongé.", whenToPick: "Choix standard pour mener l'assaut final à l'Âge Impérial." },
-                            { id: "great_wall_gatehouse", name: "Porte de la Grande Muraille", tag: "Défense Ultime", color: "blue", unlocks: ["Augmente de +100% les PV des murs en pierre et confère +25% de dégâts aux unités postées sur les remparts"], advantage: "Transforme vos remparts en forteresses impénétrables et débloque la Dynastie Ming (+10% PV global).", whenToPick: "Sur cartes fermées ou pour verrouiller la carte." }
-                        ]
-                    }
+                archetype: "Boom Économique Dynastie Song & Artillerie",
+                primaryThreat: "Activation de la Dynastie Song (-35% temps de formation villageois) suivie d'une masse de Zhuge Nu et Nids d'Abeilles.",
+                threatWindow: "7:00 — 11:00 (Masse Zhuge Nu) & 16:00+ (Dynastie Ming)",
+                recommendedCounterPlan: {
+                    unitPriority: "Cavaliers lourds ou Hommes d'armes (immunisés aux dégâts multiples des Zhuge Nu), puis EsSpringales contre les Nids d'Abeilles.",
+                    upgradePriority: "+1/+2 Défense à distance (réduit drastiquement chacun des 3 carreaux du Zhuge Nu !).",
+                    winCondition: "Frappez entre 4:30 et 7:00 pendant que la Chine investit 600 ressources dans son 2e monument Song, avant que son économie ne devienne incontrôlable."
+                },
+                events: [
+                    { time: "4:30", startPct: 20, widthPct: 18, type: "vuln", label: "Vulnérabilité 4:30–7:00", title: "Investissement Double Monument (Dynastie Song)", detail: "La Chine dépense 400 nourriture + 200 or supplémentaires pour son 2e monument : fenêtre idéale pour attaquer." },
+                    { time: "7:00", startPct: 35, widthPct: 20, type: "spike", label: "Power Spike 7:00–11:00", title: "Masse de Zhuge Nu supervisés + Lanciers", detail: "Cadence de production doublée par les Officiers Impériaux : déchiquette toute infanterie sans armure." },
+                    { time: "12:00", startPct: 58, widthPct: 18, type: "spike", label: "Power Spike 12:00–15:30", title: "Nids d'Abeilles de la Tour de l'Horloge (+50% PV)", detail: "Artillerie de zone extrêmement résistante." },
+                    { time: "17:00+", startPct: 82, widthPct: 18, type: "spike", label: "Power Spike 17:00+", title: "Dynastie Ming + Grenadiers & Bombardes", detail: "Armée de fin de partie quasi impossible à arrêter de front." }
                 ]
             },
             delhi: {
-                mechanicLabel: "Monuments Classiques (2 choix par âge construits par les villageois)",
-                specialNote: "Tous les monuments de Delhi peuvent accueillir des Érudits en garnison pour accélérer la vitesse globale des recherches gratuites.",
-                stages: [
-                    {
-                        age: "Âge I → Âge II (Féodal)",
-                        options: [
-                            { id: "dome_faith", name: "Dôme de la Foi (Dome of the Faith)", tag: "Boom Érudits & Tech", color: "emerald", unlocks: ["Produit des Érudits à moitié prix (65 Or au lieu de 130)"], advantage: "Permet d'accumuler rapidement 6 à 10 Érudits pour capturer tous les Sites Sacrés à 6:00 et accélérer toutes les technologies.", whenToPick: "Choix standard dans 85% des parties pour dominer les Sites Sacrés." },
-                            { id: "tower_victory", name: "Tour de la Victoire (Tower of Victory)", tag: "Tempo / Agression", color: "crimson", unlocks: ["Toutes les unités d'infanterie produites ou passant près de la tour gagnent +20% de vitesse d'attaque de façon permanente"], advantage: "Transforme vos Archers et Lanciers féodaux en véritables mitrailleuses pour un push all-in.", whenToPick: "Pour un rush féodal agressif ou sur cartes sans Sites Sacrés accessibles." }
-                        ]
-                    },
-                    {
-                        age: "Âge II → Âge III (Châteaux)",
-                        options: [
-                            { id: "compound_defender", name: "Complexe du Défenseur", tag: "Contrôle Map & Pierre", color: "blue", unlocks: ["Permet à l'infanterie de construire des Donjons et réduction de 25% du coût en pierre des fortifications"], advantage: "Permet de verrouiller les Sites Sacrés avec des Donjons construits directement par vos soldats.", whenToPick: "Pour sécuriser définitivement l'or des Sites Sacrés et contrôler la carte." },
-                            { id: "house_learning", name: "Maison du Savoir (House of Learning)", tag: "Tech / Élite", color: "amber", unlocks: ["Débloque des technologies uniques puissantes (Armure renforcée d'éléphants, Lames aiguisées pour Hommes d'armes)"], advantage: "Booste considérablement la puissance de mêlée des Hommes d'armes et la survie des Éléphants.", whenToPick: "Si vous disposez déjà d'une forte économie et préparez une armée d'élite." }
-                        ]
-                    },
-                    {
-                        age: "Âge III → Âge IV (Impérial)",
-                        options: [
-                            { id: "palace_sultan", name: "Palais du Sultan", tag: "Éléphants Gratuits", color: "crimson", unlocks: ["Produit automatiquement et gratuitement des Éléphants à Tour en boucle (accéléré par les Érudits en garnison)"], advantage: "Génère une armée d'Éléphants à Tour sans dépenser une seule ressource en fin de partie.", whenToPick: "Choix privilégié pour submerger l'adversaire à l'Âge Impérial." },
-                            { id: "hisar_academy", name: "Académie d'Hisar", tag: "Boom Éco", color: "emerald", unlocks: ["Génère passivement de la nourriture continue selon le nombre total de technologies recherchées"], advantage: "Assure un revenu infini de nourriture (jusqu'à 700+ nourriture/min) sans villageois.", whenToPick: "Dans les longues guerres d'usure où les fermes sont menacées." }
-                        ]
-                    }
+                archetype: "Contrôle des Sites Sacrés & Tempo Féodal",
+                primaryThreat: "Capture des 3 Sites Sacrés dès 6:15 avec Sanctité + masse de Pilleurs Ghazis et Archers boostés.",
+                threatWindow: "5:30 — 11:00 (Contrôle des Sites Sacrés)",
+                recommendedCounterPlan: {
+                    unitPriority: "Lanciers + Archers pour contester les Sites Sacrés dès 5:30 et éliminer les Érudits sans protection.",
+                    upgradePriority: "Attaque à distance et brouette pour suivre le rythme économique de Delhi.",
+                    winCondition: "Ne laissez jamais Delhi tenir 3 Sites Sacrés gratuitement : contestez au moins 2 sites sur 3 pour assécher son revenu d'or et forcer un combat équilibré."
+                },
+                events: [
+                    { time: "3:30", startPct: 14, widthPct: 10, type: "scout", label: "Repère Scout 3:30", title: "Dôme de la Foi vs Tour de la Victoire", detail: "Si Dôme de la Foi : les Érudits sortiront vers 5:30 pour les Sites Sacrés. Si Tour de la Victoire : rush infanterie immédiat." },
+                    { time: "5:30", startPct: 26, widthPct: 24, type: "spike", label: "Power Spike 5:30–11:00", title: "Sanctité + Ghazis & Archers sur Sites Sacrés", detail: "Delhi génère 400 à 600 or/min grâce aux Sites Sacrés et finance toutes ses unités." },
+                    { time: "11:30", startPct: 55, widthPct: 16, type: "vuln", label: "Vulnérabilité 11:30–14:30", title: "Transition Âge III/IV (Temps de recherche long)", detail: "Les technologies gratuites de l'Âge III et IV prennent plusieurs minutes : fenêtre pour attaquer avant ses améliorations." },
+                    { time: "16:30+", startPct: 80, widthPct: 20, type: "spike", label: "Power Spike 16:30+", title: "Éléphants à Tour & Palais du Sultan", detail: "Armée blindée soutenue par des soins d'Érudits en zone." }
                 ]
             },
             mongols: {
-                mechanicLabel: "Monuments Mobiles (Peuvent être démontés et déplacés comme tous les bâtiments mongols)",
-                specialNote: "Placer un monument près d'un Ovoo ou d'un avant-poste active des synergies de vitesse Yam et de production double.",
-                stages: [
-                    {
-                        age: "Âge I → Âge II (Féodal)",
-                        options: [
-                            { id: "silver_tree", name: "Arbre d'Argent (Silver Tree)", tag: "Boom Éco / Commerce", color: "emerald", unlocks: ["Agit comme un Marché produisant des Marchands 40% plus vite et 40% moins cher"], advantage: "Permet de lancer un boom commercial redoutable tout en raidant l'ennemi avec vos Keshiks.", whenToPick: "Standard sur presque toutes les cartes pour financer l'armée mongole." },
-                            { id: "deer_stones", name: "Pierres à Cerfs (Deer Stones)", tag: "Tempo / Mobilité", color: "crimson", unlocks: ["Diffuse immédiatement l'aura de vitesse Yam (+15% vitesse) à toutes les unités et débloque les raids de cavalerie accélérés"], advantage: "Rend vos Keshiks et Mangudaï insaisissables dès 4:10 et peut être déplacé avec votre armée.", whenToPick: "Pour un Tower Rush ou une agression totale sur un seul Forum." }
-                        ]
-                    },
-                    {
-                        age: "Âge II → Âge III (Châteaux)",
-                        options: [
-                            { id: "steppe_redoubt", name: "Redoute des Steppes", tag: "Boom Éco / Or", color: "emerald", unlocks: ["Agit comme un Ger augmentant de +50% tout l'or déposé par les villageois"], advantage: "Multiplie par 1,5 vos revenus miniers : déplacez-le directement sur chaque nouvelle grande mine d'or.", whenToPick: "Dans 90% des parties pour alimenter la production d'unités lourdes et d'améliorations." },
-                            { id: "kurultai", name: "Kurultaï", tag: "Militaire / Soutien", color: "crimson", unlocks: ["Soigne toutes les unités proches et confère +20% de dégâts lorsque le Khan se trouve à proximité"], advantage: "Déplacé juste derrière votre armée, il rend vos engagements frontaux quasi imbattables.", whenToPick: "Pour mener un assaut décisif à l'Âge III." }
-                        ]
-                    },
-                    {
-                        age: "Âge III → Âge IV (Impérial)",
-                        options: [
-                            { id: "khaganate_palace", name: "Palais du Khaganat", tag: "Armée Gratuite", color: "crimson", unlocks: ["Génère gratuitement toutes les 75 secondes une escouade d'élite (Chevaliers Rus', Lanciers de Palais, Mangudaï ou Cavaliers lourds)"], advantage: "Fournit un flux gratuit et varié d'unités d'élite de tout l'empire mongol.", whenToPick: "Choix standard pour maintenir une pression constante sans coûter d'or." },
-                            { id: "white_stupa", name: "Stupa Blanc (White Stupa)", tag: "Pierre Infinie", color: "amber", unlocks: ["Agit comme un Ovoo inépuisable générant 240 pierre/minute en continu sans gisement"], advantage: "Permet de produire des unités doubles et des améliorations améliorées à l'infini même après l'épuisement de toute la pierre de la carte.", whenToPick: "Dans les très longues parties où la pierre de la carte est épuisée." }
-                        ]
-                    }
+                archetype: "Agression Immédiate & Harcèlement Nomade",
+                primaryThreat: "Tower Rush dès 2:45 sur votre or/bois ou raids incessants de Keshiks doubles + Khan dès 4:20.",
+                threatWindow: "2:45 — 8:30 (Tower Rush & Keshiks Doubles)",
+                recommendedCounterPlan: {
+                    unitPriority: "3-4 Lanciers dès l'Âge I si vous voyez un avant-poste mongol, puis Archers + Lanciers groupés près de vos ressources.",
+                    upgradePriority: "+1 Défense à distance (contre les flèches d'avant-postes et Mangudaï) et Textiles (PV villageois).",
+                    winCondition: "Protégez votre première mine d'or avec une tour ou des lanciers, fermez les flancs de votre base et punissez l'absence totale de murs mongols par une contre-attaque."
+                },
+                events: [
+                    { time: "2:00", startPct: 8, widthPct: 12, type: "scout", label: "Repère Scout 2:00", title: "Caserne sous Ovoo = Tower Rush imminent", detail: "Si le Mongol pose une Caserne à l'Âge I, préparez immédiatement des villageois et lanciers pour défendre votre or." },
+                    { time: "3:00", startPct: 16, widthPct: 26, type: "spike", label: "Power Spike 3:00–8:30", title: "Tower Rush & Keshiks Doubles + Khan", detail: "Pression maximale en début de partie pour couper l'accès à l'or et au bois." },
+                    { time: "9:00", startPct: 44, widthPct: 18, type: "vuln", label: "Vulnérabilité 9:00–12:00", title: "Base ouverte sans aucun mur ni rempart", detail: "Une contre-attaque rapide dans l'économie mongole oblige toute son armée à rentrer défendre." },
+                    { time: "14:00+", startPct: 68, widthPct: 22, type: "spike", label: "Power Spike 14:00+", title: "Redoute des Steppes + Route de la Soie", detail: "Économie d'or explosive permettant de spammer des unités améliorées à la pierre." }
                 ]
             },
             abbasid: {
-                mechanicLabel: "Ailes de la Maison de la Sagesse (Aucune immobilisation de villageois : choix de l'ordre des 4 ailes)",
-                specialNote: "Contrairement aux autres civilisations, vos villageois continuent de récolter pendant le passage d'âge. Chaque aile débloque 3 technologies uniques.",
-                stages: [
-                    {
-                        age: "Âge I → Âge II (Féodal)",
-                        options: [
-                            { id: "eco_wing", name: "Aile Économique", tag: "Boom Éco (2-3 TC)", color: "emerald", unlocks: ["Débloque Aliments Frais (-35% coût des villageois)", "Débloque Agriculture et Traitement Amélioré (+15% récolte)"], advantage: "Propulse le meilleur boom Multi-Forums du jeu dès la 5e minute.", whenToPick: "Standard pour jouer macro sur 2 ou 3 Forums." },
-                            { id: "military_wing", name: "Aile Militaire", tag: "Tempo / Agression", color: "crimson", unlocks: ["Octroie immédiatement 2 Lanciers + 2 Archers gratuits à l'entrée à l'Âge II", "Débloque Camp d'Entraînement (+15% PV infanterie) et Selles de Chameau"], advantage: "Permet de défendre immédiatement un rush ou d'agresser dès 4:15 sans construire de caserne.", whenToPick: "Contre des civilisations très agressives (Français, Mongols, Anglais)." },
-                            { id: "culture_wing", name: "Aile Culturelle", tag: "Tech & Fast Castle", color: "amber", unlocks: ["Débloque Préservation du Savoir (-20% coût de toutes les technologies)", "Débloque Prosélytisme (conversion de moines)"], advantage: "Réduit massivement le coût de toutes les améliorations et facilite un passage rapide à l'Âge III.", whenToPick: "Pour un Fast Castle orienté Reliques et Ghulams." }
-                        ]
-                    },
-                    {
-                        age: "Âge II → Âge III (Châteaux)",
-                        options: [
-                            { id: "military_wing_3", name: "Aile Militaire (Renforts Âge III)", tag: "Militaire / Tempo", color: "crimson", unlocks: ["Octroie immédiatement 2 Ghulams + 2 Cavaliers à Chameau gratuits", "Débloque Selles de Chameau (+armure aux unités proches)"], advantage: "Donne un contingent gratuit de troupes d'élite dès l'arrivée à l'Âge III.", whenToPick: "Si vous avez ouvert avec l'Aile Économique et avez besoin d'armée immédiate." },
-                            { id: "culture_wing_3", name: "Aile Culturelle (Savoir)", tag: "Tech / Économie", color: "amber", unlocks: ["Réduit de 20% le coût de toutes les technologies militaires et économiques", "Accélère l'atteinte de l'Âge d'Or palier 3"], advantage: "Économise des milliers d'or et de nourriture sur les améliorations d'Âge III et IV.", whenToPick: "Pour maximiser l'efficacité de votre boom économique." },
-                            { id: "trade_wing", name: "Aile Commerciale", tag: "Or Infini / Commerce", color: "blue", unlocks: ["Marchands 33% moins chers et rapportant +25% de ressources secondaires (nourriture/bois en plus de l'or)"], advantage: "Transforme le commerce en source principale de richesse en fin de partie.", whenToPick: "Sur cartes avec marchés neutres éloignés ou en parties d'équipe." }
-                        ]
-                    },
-                    {
-                        age: "Âge III → Âge IV (Impérial)",
-                        options: [
-                            { id: "military_wing_4", name: "Aile Militaire (Impériale)", tag: "Assaut Final", color: "crimson", unlocks: ["Octroie gratuitement 3 Bombardes / Couleuvrines ou troupes d'élite selon la version", "Débloque toutes les améliorations militaires de l'aile"], advantage: "Fournit un soutien d'artillerie instantané pour briser les défenses ennemies.", whenToPick: "Pour conclure la partie par un push massif." },
-                            { id: "trade_wing_4", name: "Aile Commerciale (Impériale)", tag: "Économie Ultime", color: "emerald", unlocks: ["Octroie des Marchands gratuits et booste l'armure des caravanes"], advantage: "Sécurise le financement infini des Cavaliers à Chameau et Bombardes.", whenToPick: "Lorsque les mines d'or de la carte sont épuisées." }
-                        ]
-                    }
+                archetype: "Boom Multi-Forums (2TC/3TC) & Infanterie",
+                primaryThreat: "Explosion économique sur 2 ou 3 Forums avec Aliments Frais (-35% coût villageois) rendant l'Abbasside imbattable après 11:00.",
+                threatWindow: "11:00 — 20:00+ (Économie 100+ villageois & Ghulams)",
+                recommendedCounterPlan: {
+                    unitPriority: "Push féodal agressif avec Béliers dès 6:00 (Archers + Infanterie/Cavalerie) ou Fast Castle pour voler toutes les Reliques.",
+                    upgradePriority: "Ingénierie de siège (Béliers) ou technologies d'attaque.",
+                    winCondition: "Ne laissez jamais un Abbasside boom sur 3 Forums sans le punir : attaquez ses Forums secondaires entre 5:30 et 8:30 pendant qu'il n'a pas d'armée."
+                },
+                events: [
+                    { time: "3:30", startPct: 14, widthPct: 10, type: "scout", label: "Repère Scout 3:30", title: "Villageois sur la Pierre = 2TC / 3TC", detail: "Dès que vous voyez des mineurs de pierre abbassides, préparez un push avec Béliers ou un Fast Castle Reliques." },
+                    { time: "5:00", startPct: 24, widthPct: 22, type: "vuln", label: "Vulnérabilité 5:00–8:30", title: "Investissement massif dans les Forums", detail: "Fenêtre critique : l'Abbasside dépense 700 à 1400 ressources en Forums et n'a presque aucune troupe." },
+                    { time: "11:00", startPct: 54, widthPct: 22, type: "spike", label: "Power Spike 11:00–16:00", title: "Boom économique accompli + Ghulams & Chameaux", detail: "Production continue depuis 8 à 10 bâtiments militaires." },
+                    { time: "17:00+", startPct: 80, widthPct: 20, type: "spike", label: "Power Spike 17:00+", title: "Âge d'Or Palier 3 + Cavaliers à Chameau", detail: "Armée complète quasi inépuisable." }
                 ]
             },
             ottomans: {
-                mechanicLabel: "Monuments Classiques + Points de Conseil Impérial (Vizirs) débloqués par l'expérience militaire",
-                specialNote: "Chaque passage d'âge augmente la limite maximale d'Écoles Militaires gratuites que vous pouvez construire.",
-                stages: [
-                    {
-                        age: "Âge I → Âge II (Féodal)",
-                        options: [
-                            { id: "twin_minaret", name: "Médersa aux Deux Minarets", tag: "Boom Éco / Nourriture", color: "emerald", unlocks: ["Fait apparaître 4 buissons de baies infinis autour du bâtiment récoltés +20% plus vite"], advantage: "Offre une source de nourriture totalement sûre sous votre Forum sans dépenser de bois en fermes.", whenToPick: "Choix standard dans 85% des parties." },
-                            { id: "sultanhani_trade", name: "Réseau Commercial Sultanhani", tag: "Or & Commerce", color: "amber", unlocks: ["Agit comme un Marché et abrite jusqu'à 6 Marchands en garnison générant de l'or passif en sécurité"], advantage: "Génère jusqu'à 160+ or/minute à l'intérieur même de votre base sans risque de raid.", whenToPick: "Pour un Fast Castle rapide vers les Janissaires ou sur cartes sans commerce sécurisé." }
-                        ]
-                    },
-                    {
-                        age: "Âge II → Âge III (Châteaux)",
-                        options: [
-                            { id: "istanbul_observatory", name: "Observatoire Impérial d'Istanbul", tag: "Production Accélérée", color: "crimson", unlocks: ["Augmente à +100% le bonus de vitesse de production des Écoles Militaires proches d'un Forgeron/Université"], advantage: "Double la vitesse de génération gratuite de Janissaires, Lanciers et Chevaliers.", whenToPick: "Choix privilégié pour submerger l'adversaire par la masse gratuite." },
-                            { id: "mehmed_armory", name: "Armurerie Impériale de Mehmed", tag: "Siège Gratuit", color: "blue", unlocks: ["Produit automatiquement et gratuitement des engins de siège (Mangonneaux, EsSpringales, puis Grandes Bombardes)"], advantage: "Fournit des Mangonneaux gratuits dès l'Âge III sans dépenser d'or ni de bois.", whenToPick: "Pour mener un siège méthodique ou contrer les masses d'archers ennemis." }
-                        ]
-                    },
-                    {
-                        age: "Âge III → Âge IV (Impérial)",
-                        options: [
-                            { id: "sea_gate_castle", name: "Château de la Porte de la Mer", tag: "Défense & Commerce", color: "blue", unlocks: ["Forteresse massive conférant +40% de vitesse aux marchands et unités proches", "Peut accueillir une Relique"], advantage: "Verrouille une position clé sur la carte tout en boostant la mobilité de votre armée.", whenToPick: "Pour défendre un flanc stratégique ou protéger votre route commerciale." },
-                            { id: "observatory_imperial", name: "Palais de Topkapi / Observatoire", tag: "Tech & Vizirs", color: "amber", unlocks: ["Accélère les recherches de l'Université et débloque plus rapidement les derniers points de Vizir"], advantage: "Permet d'atteindre le rang maximal du Conseil Impérial (5 Écoles Militaires + Janissaires d'élite).", whenToPick: "Dans les longues batailles d'attrition à l'Âge Impérial." }
-                        ]
-                    }
+                archetype: "Production Gratuite Continue & Siège Impérial",
+                primaryThreat: "Boule de neige d'unités gratuites issues des Écoles Militaires, culminant avec Janissaires + Mehter + Grandes Bombardes.",
+                threatWindow: "8:30 — 13:00 (Janissaires) & 17:00+ (Grandes Bombardes)",
+                recommendedCounterPlan: {
+                    unitPriority: "Archers et Arbalétriers en masse (les Janissaires subissent +50% de dégâts des unités à distance !), puis Couleuvrines/EsSpringales.",
+                    upgradePriority: "Attaque à distance (+1/+2) et portée des archers.",
+                    winCondition: "Évitez la cavalerie lourde face aux Janissaires : éliminez-les à distance avec des Archers/Arbalétriers et snipez les Mehter en priorité."
+                },
+                events: [
+                    { time: "3:30", startPct: 14, widthPct: 10, type: "scout", label: "Repère Scout 3:30", title: "1 à 2 Écoles Militaires dès l'Âge I/II", detail: "Attendez-vous à des Sipahis et Lanciers gratuits dès 4:45." },
+                    { time: "5:30", startPct: 26, widthPct: 16, type: "vuln", label: "Vulnérabilité 5:30–8:00", title: "Investissement Pierre & Transition Âge III", detail: "L'Ottoman ralentit légèrement pour poser ses 3e et 4e Écoles Militaires." },
+                    { time: "9:00", startPct: 44, widthPct: 22, type: "spike", label: "Power Spike 9:00–14:00", title: "Janissaires + Mehter + Mangonneaux gratuits", detail: "Composition très puissante contre toute cavalerie et infanterie." },
+                    { time: "17:00+", startPct: 80, widthPct: 20, type: "spike", label: "Power Spike 17:00+", title: "Grandes Bombardes réparées par Janissaires", detail: "Percée de siège quasi imparable." }
                 ]
             },
             malians: {
-                mechanicLabel: "Monuments Classiques (2 choix par âge construits par les villageois)",
-                specialNote: "Les monuments maliens amplifient directement vos deux piliers économiques : les Mines à Ciel Ouvert et les Enclos à Bétail.",
-                stages: [
-                    {
-                        age: "Âge I → Âge II (Féodal)",
-                        options: [
-                            { id: "mansa_quarry", name: "Carrière de Mansa (Mansa Quarry)", tag: "Boom Éco / Or & Pierre", color: "emerald", unlocks: ["Génère passivement +75 Or ou +75 Pierre par minute en continu (commutable à tout moment)"], advantage: "En mode Pierre, finance un 2e Forum sans aucun mineur de pierre ; en mode Or, finance l'achat immédiat de Bétail.", whenToPick: "Standard dans 85% des parties pour accélérer le boom bétail." },
-                            { id: "saharan_trade", name: "Réseau Commercial Saharien", tag: "Défense & Commerce", color: "blue", unlocks: ["Agit comme un Avant-poste à Javelots fortifié et génère un péage d'or à chaque passage de marchand"], advantage: "Protège efficacement une Mine à Ciel Ouvert exposée tout en générant un revenu commercial.", whenToPick: "Contre une agression précoce ou sur les cartes avec route commerciale centrale." }
-                        ]
-                    },
-                    {
-                        age: "Âge II → Âge III (Châteaux)",
-                        options: [
-                            { id: "farimba_garrison", name: "Garnison de Farimba", tag: "Tempo / Submersion", color: "crimson", unlocks: ["Permet de recruter des lots de 5 unités d'infanterie malienne (Donso, Musofadi, Javeliniers) uniquement contre de l'Or"], advantage: "Exploite l'immense surplus d'or des Mines à Ciel Ouvert pour produire une armée entière en quelques secondes.", whenToPick: "Pour submerger l'adversaire dès l'arrivée à l'Âge des Châteaux." },
-                            { id: "grand_fulani", name: "Grand Enclos Fulani", tag: "Boom Éco Ultime", color: "emerald", unlocks: ["Génère +20 nourriture et +20 or par minute pour chaque tête de bétail placée dans son rayon (jusqu'à 20 bêtes)"], advantage: "Produit jusqu'à +400 nourriture et +400 or par minute passivement, propulsant le passage à l'Âge IV.", whenToPick: "Lorsque vous avez déjà rassemblé 15 à 20 têtes de bétail en sécurité." }
-                        ]
-                    },
-                    {
-                        age: "Âge III → Âge IV (Impérial)",
-                        options: [
-                            { id: "fort_huntress", name: "Fort de la Chasseresse", tag: "Furtivité & Embuscade", color: "crimson", unlocks: ["Forteresse massive conférant le camouflage à toutes les unités alliées dans un vaste rayon"], advantage: "Permet de masquer toute votre armée (y compris l'artillerie) pour tendre des embuscades dévastatrices.", whenToPick: "Pour contrôler le centre de la carte ou protéger une position clé." },
-                            { id: "griot_bara", name: "Griot Bara", tag: "Festivals / Buffs Globaux", color: "amber", unlocks: ["Permet d'organiser des Festivals boostant au choix la vitesse de récolte, la vitesse de production militaire ou les dégâts de siège"], advantage: "Offre des pics de puissance temporaires colossaux pour remporter une bataille décisive.", whenToPick: "Dans les longues guerres d'attrition de fin de partie." }
-                        ]
-                    }
+                archetype: "Économie Passive Bétail/Mines & Embuscades",
+                primaryThreat: "Explosion économique passive à 8:30 (20 têtes de bétail + Mines à Ciel Ouvert) permettant de spammer des vagues d'unités.",
+                threatWindow: "8:30 — 14:00 (Submersion Farimba / Bétail)",
+                recommendedCounterPlan: {
+                    unitPriority: "Archers en masse + Hommes d'armes (le Malien n'a aucune cavalerie lourde ni arbalétrier classique !), puis Mangonneaux.",
+                    upgradePriority: "+1 Attaque à distance et Balistique.",
+                    winCondition: "Attaquez les Mines à Ciel Ouvert et les Enclos à Bétail avant 7:30 avec des Archers et Éclaireurs/Cavaliers pour empêcher le décollage économique."
+                },
+                events: [
+                    { time: "3:30", startPct: 14, widthPct: 10, type: "scout", label: "Repère Scout 3:30", title: "Carrière de Mansa + Enclos à Bétail", detail: "Si le Malien achète du bétail au Moulin, attaquez immédiatement avant qu'il n'atteigne 20 bêtes." },
+                    { time: "4:30", startPct: 21, widthPct: 20, type: "vuln", label: "Vulnérabilité 4:30–7:30", title: "Investissement lourd dans le Bétail (Or)", detail: "Chaque vache coûte de l'or : le Malien a très peu d'armée tant que ses enclos ne sont pas remplis." },
+                    { time: "8:30", startPct: 42, widthPct: 24, type: "spike", label: "Power Spike 8:30–14:00", title: "Grand Enclos Fulani + Garnison de Farimba", detail: "Revenu passif colossal permettant de produire des lots de 5 unités en continu." },
+                    { time: "16:00+", startPct: 78, widthPct: 22, type: "spike", label: "Power Spike 16:00+", title: "Fort de la Chasseresse (Armée Camouflée)", detail: "Embuscades furtives avec Canonniers Musofadi." }
                 ]
             },
             byzantines: {
-                mechanicLabel: "Monuments Classiques + Réseau de Citernes & Aqueducs (Niveaux 1 à 5)",
-                specialNote: "Chaque monument byzantin améliore votre génération d'Huile d'Olive (pour recruter des mercenaires) ou renforce vos Citernes.",
-                stages: [
-                    {
-                        age: "Âge I → Âge II (Féodal)",
-                        options: [
-                            { id: "grand_winery", name: "Vignoble Impérial (Grand Winery)", tag: "Boom Éco / Mercenaires", color: "emerald", unlocks: ["Agit comme un Moulin et un Monastère", "Augmente de +60% la génération d'Huile d'Olive des baies et fermes proches"], advantage: "Multiplie les lots de mercenaires gratuits (Archers Longs, Keshiks, Javeliniers) dès l'Âge II.", whenToPick: "Standard sur la majorité des cartes pour alimenter la Maison de Mercenaires." },
-                            { id: "hippodrome", name: "Hippodrome Impérial", tag: "Tempo / Cavalerie", color: "crimson", unlocks: ["Agit comme une Écurie et débloque la capacité Triomphe (booste vitesse et dégâts de toute la cavalerie après chaque élimination)"], advantage: "Rend vos Cavaliers et Cataphractes redoutables en escarmouche et harcèlement.", whenToPick: "Pour un jeu agressif basé sur les raids de cavalerie." }
-                        ]
-                    },
-                    {
-                        age: "Âge II → Âge III (Châteaux)",
-                        options: [
-                            { id: "golden_horn", name: "Tour de la Corne d'Or", tag: "Mercenaires Gratuits", color: "amber", unlocks: ["Produit automatiquement et gratuitement des lots de mercenaires en boucle (accéléré par le niveau des Citernes)"], advantage: "Génère gratuitement des éléphants, chevaliers ou arbalétriers mercenaires sans dépenser d'huile d'olive.", whenToPick: "Choix privilégié lorsque votre réseau de Citernes est déjà au niveau 3 ou 4." },
-                            { id: "cistern_first_hill", name: "Citerne de la Première Colline", tag: "Boom Éco & Flasques", color: "emerald", unlocks: ["Agit comme une Citerne géante et génère des Flasques de Feu Grégeois boostant les villageois"], advantage: "Permet d'atteindre instantanément le niveau maximal du réseau d'Aqueducs (+25% récolte globale).", whenToPick: "Pour un boom économique rapide sur plusieurs Forums." }
-                        ]
-                    },
-                    {
-                        age: "Âge III → Âge IV (Impérial)",
-                        options: [
-                            { id: "foreign_engineering", name: "Compagnie d'Ingénierie Étrangère", tag: "Siège d'Élite", color: "crimson", unlocks: ["Permet de recruter des engins de siège étrangers uniques (Nids d'Abeilles, Bombardes Royales, Couleuvrines) contre de l'Huile d'Olive"], advantage: "Donne accès aux meilleures pièces d'artillerie du jeu sans dépenser d'or.", whenToPick: "Pour dominer les combats de siège à l'Âge Impérial." },
-                            { id: "palatine_school", name: "École Palatine", tag: "Armée Impériale", color: "blue", unlocks: ["Octroie gratuitement une unité byzantine (Cataphracte, Garde Varègue, Limitanei) à chaque unité produite dans vos bâtiments"], advantage: "Multiplie la taille de votre armée d'élite pour un coût réduit.", whenToPick: "Pour submerger l'adversaire avec des Cataphractes et Gardes Varègues." }
-                        ]
-                    }
+                archetype: "Réseau de Citernes & Mercenaires Polyvalents",
+                primaryThreat: "Montée en puissance exponentielle des Citernes (Niv. 3-5) et lots gratuits de mercenaires via l'Huile d'Olive.",
+                threatWindow: "9:30 — 15:00 & 17:00+ (Cataphractes + Feu Grégeois)",
+                recommendedCounterPlan: {
+                    unitPriority: "Archers + Hommes d'armes pour percer les Limitanei en mêlée, puis Arbalétriers + Lanciers contre les Cataphractes.",
+                    upgradePriority: "Attaque en mêlée et contre-siège.",
+                    winCondition: "Ciblez et cassez les segments d'Aqueducs exposés avec votre cavalerie légère : couper le réseau de Citernes fait chuter instantanément toute la production byzantine."
+                },
+                events: [
+                    { time: "4:30", startPct: 21, widthPct: 18, type: "vuln", label: "Vulnérabilité 4:30–7:30", title: "Construction des Citernes et Aqueducs", detail: "Les segments d'Aqueducs ont peu de PV et leur destruction coupe les bonus économiques." },
+                    { time: "7:30", startPct: 37, widthPct: 20, type: "spike", label: "Power Spike 7:30–11:00", title: "Limitanei Mur de Boucliers + 1er lot Mercenaires", detail: "Ligne de front très résistante soutenue par des Archers Longs ou Keshiks mercenaires." },
+                    { time: "14:00+", startPct: 70, widthPct: 30, type: "spike", label: "Power Spike 14:00+", title: "Cataphractes + Gardes Varègues + Tour Corne d'Or", detail: "Armée d'élite quasi impossible à arrêter en combat rangé." }
                 ]
             },
             japanese: {
-                mechanicLabel: "Monuments Classiques + Améliorations des Forums en Manoirs de Daimyo (3 niveaux)",
-                specialNote: "Miner de l'or génère gratuitement de la pierre (20%), permettant d'améliorer vos Forums en Manoirs et Châteaux de Daimyo.",
-                stages: [
-                    {
-                        age: "Âge I → Âge II (Féodal)",
-                        options: [
-                            { id: "kura_storehouse", name: "Entrepôt Kura (Kura Storehouse)", tag: "Boom Éco", color: "emerald", unlocks: ["Agit comme une Forge/Moulin et fait apparaître gratuitement une Ferme toutes les 45 secondes autour de lui"], advantage: "Économise des centaines de bois sur la transition vers les fermes tout en boostant les récoltes.", whenToPick: "Standard pour un jeu économique solide ou un Fast Castle." },
-                            { id: "koka_township", name: "Canton de Koka (Koka Township)", tag: "Tempo / Infiltration", color: "crimson", unlocks: ["Produit immédiatement un Shinobi gratuit et débloque la formation des Shinobis (espionnage, sabotage, téléportation)"], advantage: "Permet de harceler les villageois ennemis dès 4:15 et de saboter les bâtiments de production.", whenToPick: "Pour perturber l'économie adverse en début de partie." }
-                        ]
-                    },
-                    {
-                        age: "Âge II → Âge III (Châteaux)",
-                        options: [
-                            { id: "floating_gate", name: "Porte Flottante (Floating Gate)", tag: "Reliques & Buffs", color: "amber", unlocks: ["Produit immédiatement un Prêtre Shinto gratuit et débloque des Yorishiro (reliques spéciales à placer dans les bâtiments)"], advantage: "Placer un Yorishiro dans une Forge, une Écurie ou un Forum booste sa production ou ses revenus de +50%.", whenToPick: "Choix privilégié dans 85% des parties pour prendre l'avantage technologique et économique." },
-                            { id: "temple_equality", name: "Temple de l'Égalité", tag: "Militaire / Soin", color: "blue", unlocks: ["Produit des Moine-Guerriers Sohei et débloque des capacités de soin et de contrôle en combat"], advantage: "Renforce la survie de vos Samouraïs et Onna-Bugeisha dans les mêlées prolongées.", whenToPick: "Si les Reliques de la carte ont déjà été capturées par l'adversaire." }
-                        ]
-                    },
-                    {
-                        age: "Âge III → Âge IV (Impérial)",
-                        options: [
-                            { id: "castle_crow", name: "Château du Corbeau", tag: "Contrôle Map & Trésors", color: "blue", unlocks: ["Château japonais d'élite générant passivement de l'or et de la pierre", "Débloque les Caravanes au Trésor"], advantage: "Verrouille une position clé tout en générant les ressources rares de fin de partie.", whenToPick: "Pour contrôler le centre de la carte ou sécuriser les ressources finales." },
-                            { id: "tanegashima_gunsmith", name: "Armurerie Tanegashima", tag: "Poudre & Siège", color: "crimson", unlocks: ["Génère des tickets gratuits permettant d'invoquer gratuitement des Ozutsu (canonniers lourds) et Bombardes"], advantage: "Les Ozutsu détruisent les bâtiments et formations ennemies à distance avec une puissance colossale.", whenToPick: "Pour mener l'assaut final et raser les fortifications adverses." }
-                        ]
-                    }
+                archetype: "Infanterie Samouraï & Économie Daimyo",
+                primaryThreat: "Fast Castle vers 7:15 avec l'Entrepôt Kura pour déployer des Samouraïs Montés et récupérer les Reliques (Yorishiro).",
+                threatWindow: "7:30 — 13:00 (Samouraïs Montés & Yorishiro)",
+                recommendedCounterPlan: {
+                    unitPriority: "Cavaliers + Archers à l'Âge II pour punir les baies japonaises, puis Arbalétriers + Lanciers dès l'Âge III.",
+                    upgradePriority: "+1/+2 Attaque à distance (indispensable contre l'armure des Samouraïs).",
+                    winCondition: "Contestez les baies externes et les Reliques à 7:30 pour empêcher le Japonais de placer des Yorishiro dans ses bâtiments de production."
+                },
+                events: [
+                    { time: "4:30", startPct: 21, widthPct: 18, type: "vuln", label: "Vulnérabilité 4:30–7:15", title: "Transition Entrepôt Kura & Fast Castle", detail: "Si le Japonais vise l'Âge III rapide, ses récolteurs de baies et d'or sont exposés." },
+                    { time: "7:30", startPct: 37, widthPct: 24, type: "spike", label: "Power Spike 7:30–13:00", title: "Porte Flottante (Yorishiro) + Samouraïs Montés", detail: "Cavalerie lourde à bouclier déviant le premier coup + production accélérée." },
+                    { time: "16:30+", startPct: 80, widthPct: 20, type: "spike", label: "Power Spike 16:30+", title: "Ozutsu & Armurerie Tanegashima", detail: "Canonniers lourds détruisant les bâtiments et formations." }
                 ]
             },
             ayyubids: {
-                mechanicLabel: "Maison de la Sagesse Modulaire (8 Ailes disponibles à chaque passage d'âge — Aucun villageois immobilisé)",
-                specialNote: "Contrairement aux Abbassides, vous pouvez choisir n'importe quelle aile disponible à chaque transition pour obtenir un effet immédiat (renforts, villageois gratuits, passage d'âge rapide).",
-                stages: [
-                    {
-                        age: "Âge I → Âge II (Féodal)",
-                        options: [
-                            { id: "ayy_mil_reinforce", name: "Aile Militaire : Renforts", tag: "Tempo / Harcèlement", color: "crimson", unlocks: ["Invoque immédiatement un Pilleur du Désert gratuit à la finition du passage d'âge", "Génère des renforts périodiques"], advantage: "Permet d'attaquer l'or adverse dès 4:10 sans construire d'écurie.", whenToPick: "Standard pour prendre l'initiative et dicter le tempo dès l'Âge II." },
-                            { id: "ayy_eco_growth", name: "Aile Économique : Croissance", tag: "Boom Éco", color: "emerald", unlocks: ["Octroie immédiatement 3 Villageois gratuits et un bonus de récolte des baies"], advantage: "Donne une avance économique instantanée sans construire de deuxième Forum.", whenToPick: "Pour un démarrage économique rapide et flexible." },
-                            { id: "ayy_cult_advance", name: "Aile Culturelle : Avancement", tag: "Fast Castle", color: "amber", unlocks: ["Réduit le coût du passage d'âge de 200 nourriture et 100 or"], advantage: "Permet d'atteindre l'Âge III dès 6:30 pour sécuriser les Reliques avec des Derviches.", whenToPick: "Pour rush l'Âge des Châteaux et déployer des Lanciers à Chameau." }
-                        ]
-                    },
-                    {
-                        age: "Âge II → Âge III (Châteaux)",
-                        options: [
-                            { id: "ayy_cult_logistics", name: "Aile Culturelle : Logistique", tag: "Reliques & Soin", color: "amber", unlocks: ["Invoque immédiatement 3 Derviches (soigneurs montés à chameau) gratuits et soigne en zone"], advantage: "Permet de capturer toutes les Reliques en quelques secondes et rend votre armée quasi immortelle en combat.", whenToPick: "Choix le plus populaire à l'Âge III pour dominer la carte et les Reliques." },
-                            { id: "ayy_mil_smiths", name: "Aile Militaire : Forgerons", tag: "Militaire / Tech", color: "crimson", unlocks: ["Débloque gratuitement toutes les améliorations de forge de l'âge actuel et réduit le coût des unités de siège"], advantage: "Économise des centaines d'or et donne un pic de puissance immédiat à toute votre armée.", whenToPick: "Pour mener un assaut immédiat dès l'arrivée à l'Âge III." },
-                            { id: "ayy_trade_bazaar", name: "Aile Commerciale : Bazar", tag: "Économie / Flexibilité", color: "blue", unlocks: ["Permet d'acheter à prix cassé des lots de ressources, d'unités ou de villageois toutes les 2 minutes"], advantage: "Offre une souplesse tactique énorme pour combler n'importe quel manque de ressources.", whenToPick: "Dans les parties disputées où l'adaptation est clé." }
-                        ]
-                    },
-                    {
-                        age: "Âge III → Âge IV (Impérial)",
-                        options: [
-                            { id: "ayy_mil_siege", name: "Aile Militaire : Ingénieurs", tag: "Siège & Assaut", color: "crimson", unlocks: ["Invoque gratuitement des Mangonneaux Manjaniq / Bombardes et améliore la portée de siège"], advantage: "Permet de percer instantanément les défenses impériales ennemies.", whenToPick: "Pour conclure la partie par un push massif." },
-                            { id: "ayy_eco_golden", name: "Aile Économique : Âge d'Or", tag: "Économie Ultime", color: "emerald", unlocks: ["Débloque le palier 5 de l'Âge d'Or (+30% récolte et production)"], advantage: "Maximise la production continue de Lanciers à Chameau et d'artillerie.", whenToPick: "Dans les longues guerres d'attrition." }
-                        ]
-                    }
+                archetype: "Adaptabilité Foudroyante & Fast Castle",
+                primaryThreat: "Pilleur du Désert gratuit dès 4:10 ou passage Âge III éclair à 6:30 avec 3 Derviches gratuits pour voler toutes les Reliques.",
+                threatWindow: "4:10 — 6:30 (Raid Pilleur) & 6:45 — 11:00 (Fast Castle)",
+                recommendedCounterPlan: {
+                    unitPriority: "Archers à pied (les Pilleurs du Désert et Chameaux ont 0 armure à distance !), accompagnés de quelques Lanciers.",
+                    upgradePriority: "Attaque à distance (+1/+2) et Balistique.",
+                    winCondition: "Ne vous laissez pas surprendre par le premier Pilleur du Désert à 4:15 sur votre or, et préparez des unités pour contester les Reliques dès 6:45."
+                },
+                events: [
+                    { time: "4:10", startPct: 18, widthPct: 16, type: "spike", label: "Power Spike 4:10–6:30", title: "Pilleur du Désert gratuit (Aile Militaire)", detail: "Harcèlement immédiat sur vos mineurs d'or sans bâtiment militaire requis." },
+                    { time: "6:45", startPct: 33, widthPct: 22, type: "spike", label: "Power Spike 6:45–11:00", title: "Fast Castle + 3 Derviches & Lanciers à Chameau", detail: "Capture ultra-rapide des Reliques et soins de zone en combat." },
+                    { time: "13:00", startPct: 64, widthPct: 18, type: "vuln", label: "Vulnérabilité 13:00–16:00", title: "Absence de bonus économique permanent sur les villageois", detail: "Si l'Ayyoubide n'a pas pris d'avance sur les Reliques, son économie s'essouffle face aux civilisations macro." }
                 ]
             },
             jeanne: {
-                mechanicLabel: "Monuments Classiques + Montée en Niveau de Jeanne d'Arc (Niveaux 1 à 4)",
-                specialNote: "Faire construire les monuments par Jeanne d'Arc lui rapporte de l'expérience directe pour débloquer ses capacités héroïques.",
-                stages: [
-                    {
-                        age: "Âge I → Âge II (Féodal)",
-                        options: [
-                            { id: "jeanne_school_cav", name: "École de Cavalerie", tag: "Tempo / Cavalerie", color: "crimson", unlocks: ["Produit des Chevaliers Royaux 20% plus vite", "Cible idéale pour la capacité Consécration de Jeanne (-25% coût nourriture)"], advantage: "Combine la puissance de Jeanne Niveau 2 avec des Chevaliers Royaux à prix réduit dès 4:30.", whenToPick: "Standard dans 90% des parties pour dominer le début de partie." },
-                            { id: "jeanne_chamber", name: "Chambre de Commerce", tag: "Boom Éco", color: "emerald", unlocks: ["Marchands gratuits lors des recherches économiques"], advantage: "Assure un flux d'or pour racheter Jeanne si nécessaire et financer ses compagnons.", whenToPick: "Sur cartes fermées ou en parties d'équipe." }
-                        ]
-                    },
-                    {
-                        age: "Âge II → Âge III (Châteaux)",
-                        options: [
-                            { id: "jeanne_royal_inst", name: "Institut Royal", tag: "Tech / Power Spike", color: "amber", unlocks: ["Technologies uniques de cavalerie et arbalétriers un âge plus tôt"], advantage: "Propulse la puissance des Chevaliers Royaux et des Compagnons de Jeanne (Cavaliers/Champions) à l'Âge III.", whenToPick: "Pour un assaut décisif à l'Âge des Châteaux." },
-                            { id: "jeanne_guild_hall", name: "Hôtel des Corporations", tag: "Boom Éco", color: "emerald", unlocks: ["Accumulation passive de ressources à taux croissant"], advantage: "Sécurise le passage à l'Âge IV (Niveau 4 de Jeanne).", whenToPick: "Si la partie s'éternise." }
-                        ]
-                    },
-                    {
-                        age: "Âge III → Âge IV (Impérial)",
-                        options: [
-                            { id: "jeanne_red_palace", name: "Palais Rouge", tag: "Défense & Contrôle", color: "crimson", unlocks: ["Donjon d'élite à arbalètes + arbalètes sur tous les Forums/Donjons"], advantage: "Protège votre économie pendant que Jeanne Niveau 4 mène l'assaut final.", whenToPick: "Contre les contre-attaques de fin de partie." },
-                            { id: "jeanne_artillery", name: "Collège d'Artillerie", tag: "Poudre & Siège", color: "blue", unlocks: ["Canons Royaux +20% dégâts sans temps de déploiement"], advantage: "Détruit les forteresses ennemies pendant que Jeanne soigne et inspire les troupes.", whenToPick: "Pour briser les lignes fortifiées." }
-                        ]
-                    }
+                archetype: "Héroïne Évolutive & Pression Cavalerie",
+                primaryThreat: "Montée de niveau rapide de Jeanne d'Arc (Niveau 2 à 4:45, Niveau 3 à 8:30) accompagnée de Chevaliers Royaux consacrés (-25% coût).",
+                threatWindow: "4:45 — 10:30 (Jeanne Niv. 2-3 + Chevaliers)",
+                recommendedCounterPlan: {
+                    unitPriority: "Archers + Lanciers groupés (focus immédiat de tous vos archers sur Jeanne dès qu'elle s'approche !).",
+                    upgradePriority: "Attaque à distance (+1/+2) pour abattre Jeanne rapidement.",
+                    winCondition: "Éliminer Jeanne d'Arc en combat coûte de l'or à l'adversaire et stoppe son gain d'XP : focalisez vos tirs sur elle dès qu'elle s'expose."
+                },
+                events: [
+                    { time: "4:45", startPct: 22, widthPct: 24, type: "spike", label: "Power Spike 4:45–10:30", title: "Jeanne Niveau 2 + Chevaliers Royaux Consacrés", detail: "Soin de zone, flèche sacrée et cavalerie lourde à prix réduit." },
+                    { time: "10:30", startPct: 52, widthPct: 16, type: "vuln", label: "Vulnérabilité 10:30–13:30", title: "Économie standard sans bonus de villageois", detail: "Si Jeanne a été retardée ou éliminée, l'économie est inférieure à celle des Français." },
+                    { time: "15:00+", startPct: 74, widthPct: 26, type: "spike", label: "Power Spike 15:00+", title: "Jeanne Niveau 4 (Commandante) + Compagnons", detail: "Invocations de troupes d'élite et buffs massifs d'armée." }
                 ]
             },
             order_of_dragon: {
-                mechanicLabel: "Monuments Classiques (Unités et Villageois Dorés d'élite 2x plus puissants)",
-                specialNote: "Chaque amélioration débloquée par les monuments a un impact double sur les statistiques déjà colossales des unités Dorées.",
-                stages: [
-                    {
-                        age: "Âge I → Âge II (Féodal)",
-                        options: [
-                            { id: "ood_meinwerk", name: "Palais de Meinwerk", tag: "Militaire / Tech", color: "crimson", unlocks: ["Technologies de forge uniques pour les unités Dorées (Acier de Zornhau, Armure de Plaques Dorée)"], advantage: "Rend vos Hommes d'armes et Archers Dorés quasi invincibles en duel à l'Âge II.", whenToPick: "Choix privilégié pour dominer les escarmouches dès l'Âge Féodal." },
-                            { id: "ood_aachen", name: "Chapelle d'Aix-la-Chapelle", tag: "Boom Éco", color: "emerald", unlocks: ["Aura d'inspiration d'un Prélat sur l'ensemble de votre zone de départ"], advantage: "Booste encore davantage la vitesse de récolte déjà élevée (+28%) des Villageois Dorés.", whenToPick: "Pour un Fast Castle rapide vers les Chevaliers Dorés." }
-                        ]
-                    },
-                    {
-                        age: "Âge II → Âge III (Châteaux)",
-                        options: [
-                            { id: "ood_burgrave", name: "Palais de Burgrave", tag: "Tempo / Armée Dorée", color: "crimson", unlocks: ["Produit les unités d'infanterie Dorées 400% plus vite (une à une en quelques secondes)"], advantage: "Permet de déployer très rapidement une force de frappe d'Hommes d'armes et Landsknechte Dorés.", whenToPick: "Pour un assaut massif à l'Âge III." },
-                            { id: "ood_regnitz", name: "Cathédrale de Regnitz", tag: "Or Infini / Reliques", color: "amber", unlocks: ["Double l'or généré par jusqu'à 2 Reliques en garnison"], advantage: "Finance le coût élevé en or des Chevaliers Dorés et Arbalétriers Dorés.", whenToPick: "Dès que vous contrôlez 2 Reliques ou plus." }
-                        ]
-                    },
-                    {
-                        age: "Âge III → Âge IV (Impérial)",
-                        options: [
-                            { id: "ood_swabia", name: "Palais de Souabe", tag: "Boom Éco Ultime", color: "emerald", unlocks: ["Produit des Villageois Dorés à prix réduit et vitesse éclair"], advantage: "Permet d'atteindre le plafond de population avec une économie colossale.", whenToPick: "Standard pour écraser l'adversaire sur la durée." },
-                            { id: "ood_elzbach", name: "Palais d'Elzbach", tag: "Défense Ultime", color: "blue", unlocks: ["Forteresse réduisant de 33% les dégâts subis par les bâtiments proches"], advantage: "Verrouille une position clé sur la carte.", whenToPick: "Sur cartes fermées ou pour défendre un Site Sacré." }
-                        ]
-                    }
+                archetype: "Troupes Dorées d'Élite à Haute Densité",
+                primaryThreat: "Escouades d'unités Dorées (2x PV et 2x attaque) soignées par des Prélats, quasi impossibles à battre à effectif égal.",
+                threatWindow: "5:00 — 9:00 & 14:00+ (Armée Dorée Complète)",
+                recommendedCounterPlan: {
+                    unitPriority: "Contres spécialisés stricts : Arbalétriers contre Hommes d'armes/Chevaliers Dorés, Cavaleries légères contre Archers Dorés, et Moines pour convertir.",
+                    upgradePriority: "Attaque à distance et technologies de forge.",
+                    winCondition: "Attaquez sur deux côtés opposés de la base simultanément : l'Ordre a peu d'unités et ne peut pas défendre deux fronts à la fois."
+                },
+                events: [
+                    { time: "4:30", startPct: 20, widthPct: 16, type: "vuln", label: "Vulnérabilité 4:30–6:30", title: "Effectifs très réduits en début de partie", detail: "Chaque unité Dorée coûte le double : harcelez deux ressources éloignées en même temps." },
+                    { time: "7:30", startPct: 37, widthPct: 22, type: "spike", label: "Power Spike 7:30–12:00", title: "Chevaliers Dorés + Prélats soigneurs", detail: "Très haute résistance aux escarmouches et raids." },
+                    { time: "15:00+", startPct: 75, widthPct: 25, type: "spike", label: "Power Spike 15:00+", title: "Armée Dorée 200/200 + Palais de Souabe", detail: "Densité de puissance maximale du jeu à population égale." }
                 ]
             },
             zhuxi: {
-                mechanicLabel: "Système Double : 1 Monument = Passage d'Âge | Les 2 Monuments d'un même âge = Activation de la Dynastie",
-                specialNote: "Les monuments de Zhu Xi sont axés sur l'accélération économique et le déblocage des Moines Shaolin et Gardes Impériaux.",
-                dynasties: [
-                    { name: "Dynastie Tang (Départ)", req: "Active dès le début de la partie", bonus: "Coût des monuments réduit de -15%." },
-                    { name: "Dynastie Song (Âge II)", req: "Jardin de Méditation + Académie de Jiangnan", bonus: "Coût des fermes et bâtiments économiques réduit de -40% • Débloque le Grenier et le Zhuge Nu." },
-                    { name: "Dynastie Yuan (Âge III)", req: "Temple de la Montagne + Bibliothèque de Zhu Xi", bonus: "Coût de toutes les unités réduit de -10% • Débloque la Pagode et le Garde Impérial." },
-                    { name: "Dynastie Ming (Âge IV)", req: "Pagode du Soleil + Temple du Ciel", bonus: "Dégâts de toutes les unités uniques +15% • Débloque le Grenadier." }
-                ],
-                stages: [
-                    {
-                        age: "Âge I → Âge II (Féodal)",
-                        options: [
-                            { id: "meditation_gardens", name: "Jardin de Méditation", tag: "Boom Éco Passif", color: "emerald", unlocks: ["Génère gratuitement de la nourriture, du bois, de l'or et de la pierre en fonction des ressources naturelles proches"], advantage: "Offre un revenu passif gratuit dès 4:10 sans occuper de villageois.", whenToPick: "Toujours en premier monument dès que vous repérez un bel amas de ressources." },
-                            { id: "jiangnan_tower", name: "Académie de Jiangnan", tag: "Tempo / Armée Gratuite", color: "crimson", unlocks: ["Octroie gratuitement un Zhuge Nu, un Cavalier ou un Lancier à chaque bâtiment militaire construit"], advantage: "Permet de masser gratuitement des Zhuge Nu tout en posant vos bâtiments et active la Dynastie Song.", whenToPick: "En 2e monument Âge II pour activer la Dynastie Song et lancer un rush Zhuge Nu." }
-                        ]
-                    },
-                    {
-                        age: "Âge II → Âge III (Châteaux)",
-                        options: [
-                            { id: "mount_lu_academy", name: "Académie du Mont Lu", tag: "Tech & Officiers", color: "amber", unlocks: ["Débloque des améliorations uniques pour les Officiers Impériaux et accélère la collecte d'impôts"], advantage: "Propulse vos revenus d'or via les Officiers Impériaux.", whenToPick: "Pour un développement économique et technologique rapide." },
-                            { id: "shaolin_monastery", name: "Monastère Shaolin", tag: "Militaire / Moines Shaolin", color: "crimson", unlocks: ["Permet de recruter des Moines Shaolin (guerriers à bâton déviant les flèches) contre de la nourriture uniquement"], advantage: "Les Moines Shaolin capturent les Reliques tout en décimant l'infanterie et les archers ennemis.", whenToPick: "Choix privilégié à l'Âge III pour dominer les combats et les Reliques." }
-                        ]
-                    },
-                    {
-                        age: "Âge III → Âge IV (Impérial)",
-                        options: [
-                            { id: "zhuxi_library", name: "Bibliothèque de Zhu Xi", tag: "Tech Ultime", color: "amber", unlocks: ["Permet de rechercher 2 technologies exclusives parmi 5 (Gardes Impériaux d'élite, Bombardes à portée accrue, Arbalétriers de garde...)"], advantage: "Offre les améliorations militaires les plus puissantes de fin de partie.", whenToPick: "Choix standard pour écraser l'adversaire à l'Âge Impérial." },
-                            { id: "temple_sun", name: "Temple du Soleil", tag: "Aura Globale", color: "blue", unlocks: ["Permet de basculer entre des auras globales (soin continu, dégâts bonus ou vitesse de déplacement)"], advantage: "Soutient toute votre armée sur l'ensemble de la carte.", whenToPick: "Dans les grandes batailles rangées." }
-                        ]
-                    }
+                archetype: "Croissance Économique Rapide & Rush Zhuge Nu",
+                primaryThreat: "Revenus passifs du Jardin de Méditation dès 4:10 suivis d'un rush massif Zhuge Nu (Académie de Jiangnan) ou Fast Castle Moines Shaolin.",
+                threatWindow: "5:30 — 10:00 (Rush Zhuge Nu) & 15:00+ (Gardes Impériaux)",
+                recommendedCounterPlan: {
+                    unitPriority: "Cavaliers lourds ou Hommes d'armes à l'Âge II, puis Arbalétriers + Mangonneaux contre les Moines Shaolin et Zhuge Nu.",
+                    upgradePriority: "+1/+2 Défense à distance dès l'entrée à l'Âge II.",
+                    winCondition: "Repérez et détruisez le Jardin de Méditation s'il est placé sur des ressources externes, et équipez l'armure à distance contre les Zhuge Nu."
+                },
+                events: [
+                    { time: "3:30", startPct: 14, widthPct: 10, type: "scout", label: "Repère Scout 3:30", title: "Localiser le Jardin de Méditation", detail: "S'il est posé loin de son Forum sur une mine d'or/pierre, détruisez-le dès 4:30." },
+                    { time: "5:30", startPct: 26, widthPct: 22, type: "spike", label: "Power Spike 5:30–10:00", title: "Dynastie Song + Zhuge Nu gratuits (Jiangnan)", detail: "Submersion rapide d'arbalétriers à répétition." },
+                    { time: "10:00", startPct: 48, widthPct: 16, type: "vuln", label: "Vulnérabilité 10:00–13:00", title: "Manque de défenses statiques (pas de Barbacane)", detail: "Zhu Xi est beaucoup plus vulnérable aux contre-attaques de cavalerie que la Chine classique." },
+                    { time: "15:30+", startPct: 76, widthPct: 24, type: "spike", label: "Power Spike 15:30+", title: "Gardes Impériaux + Bibliothèque de Zhu Xi", detail: "Cavalerie lourde d'élite et améliorations uniques dévastatrices." }
                 ]
             },
             lancaster: {
-                mechanicLabel: "Monuments Classiques + Réseau de Manoirs Seigneuriaux (jusqu'à 9 Manoirs)",
-                specialNote: "Les monuments de Lancastre renforcent vos Manoirs et la mobilisation de vos milices paysannes (Levy).",
-                stages: [
-                    {
-                        age: "Âge I → Âge II (Féodal)",
-                        options: [
-                            { id: "lancaster_castle", name: "Tour de Lancastre", tag: "Boom Éco / Manoirs", color: "emerald", unlocks: ["Réduit le coût des premiers Manoirs et améliore la capacité de mobilisation des milices"], advantage: "Accélère la mise en place de votre revenu passif de Manoirs dès l'Âge II.", whenToPick: "Standard dans 85% des parties." },
-                            { id: "abbey_rose", name: "Abbaye de la Rose Rouge", tag: "Tempo / Yeomen", color: "crimson", unlocks: ["Accélère la production des Yeomen et réduit le temps de recharge de leur tir synchronisé"], advantage: "Rend vos salves de Yeomen dévastatrices pour éliminer les cibles prioritaires dès l'Âge II.", whenToPick: "Pour un jeu agressif basé sur les escarmouches d'archers." }
-                        ]
-                    },
-                    {
-                        age: "Âge II → Âge III (Châteaux)",
-                        options: [
-                            { id: "kings_college", name: "King's College", tag: "Tech & Économie", color: "amber", unlocks: ["Débloque des améliorations économiques et militaires uniques pour les Manoirs et les Gardes du Comte"], advantage: "Augmente les revenus passifs de chaque Manoir existant.", whenToPick: "Lorsque vous possédez déjà 4 à 6 Manoirs sur la carte." },
-                            { id: "bolton_castle", name: "Château de Bolton", tag: "Défense & Production", color: "blue", unlocks: ["Donjon fortifié produisant des Gardes du Comte et engins de siège plus rapidement"], advantage: "Ancrage défensif solide pour verrouiller le centre de la carte.", whenToPick: "Contre une forte pression ennemie." }
-                        ]
-                    },
-                    {
-                        age: "Âge III → Âge IV (Impérial)",
-                        options: [
-                            { id: "pontefract", name: "Forteresse de Pontefract", tag: "Contrôle Map", color: "crimson", unlocks: ["Forteresse massive équipée de canons et augmentant la portée des Manoirs proches"], advantage: "Verrouille la carte en fin de partie.", whenToPick: "Pour tenir les Sites Sacrés." },
-                            { id: "royal_mint_lanc", name: "Hôtel des Monnaies Royal", tag: "Or Infini", color: "emerald", unlocks: ["Convertit une partie des revenus des Manoirs en or supplémentaire et finance les armées d'élite"], advantage: "Assure un flux d'or continu même après l'épuisement des mines.", whenToPick: "Dans les longues parties d'attrition." }
-                        ]
-                    }
+                archetype: "Économie de Manoirs & Salves de Yeomen",
+                primaryThreat: "Multiplication des Manoirs générant un revenu passif intarissable et tirs synchronisés des Yeomen décimant vos unités clés.",
+                threatWindow: "8:30 — 15:00 (Réseau de 6+ Manoirs)",
+                recommendedCounterPlan: {
+                    unitPriority: "Cavaliers lourds / Hommes d'armes + Béliers ou Trébuchets à l'Âge III pour raser les Manoirs un par un.",
+                    upgradePriority: "+1/+2 Défense à distance et Ingénierie de siège.",
+                    winCondition: "Ne restez pas passif : chaque Manoir détruit réduit durablement l'économie passif de Lancastre. Évitez de pack vos troupes face au tir synchronisé des Yeomen."
+                },
+                events: [
+                    { time: "4:30", startPct: 21, widthPct: 20, type: "vuln", label: "Vulnérabilité 4:30–7:30", title: "Investissement Bois/Pierre dans les premiers Manoirs", detail: "Période idéale pour attaquer avec des Béliers avant que le réseau de Manoirs ne soit rentabilisé." },
+                    { time: "8:30", startPct: 42, widthPct: 24, type: "spike", label: "Power Spike 8:30–15:00", title: "6 à 9 Manoirs actifs + Yeomen & Gardes du Comte", detail: "Revenu passif massif et défense très solide grâce aux levées de milice." },
+                    { time: "16:00+", startPct: 78, widthPct: 22, type: "spike", label: "Power Spike 16:00+", title: "Forteresse de Pontefract + Hôtel des Monnaies", detail: "Financement continu de l'armée même sans mineurs." }
                 ]
             },
             templars: {
-                mechanicLabel: "Commanderies des Templiers (3 choix par âge directement depuis le Forum — Aucun villageois immobilisé !)",
-                specialNote: "Chaque Commanderie choisie débloque définitivement une unité croisée unique ET un bonus passif permanent pour toute votre civilisation.",
-                stages: [
-                    {
-                        age: "Âge I → Âge II (Féodal)",
-                        options: [
-                            { id: "cmd_hospitallers", name: "Commanderie des Hospitaliers", tag: "Économie & Soin", color: "emerald", unlocks: ["Unité : Chevalier Hospitalier (infanterie lourde capable de soigner les alliés)", "Passif : +15% vitesse de soin et coût réduit des bâtiments religieux"], advantage: "Idéal pour survivre aux agressions précoces et sécuriser les Sites Sacrés dès l'Âge II.", whenToPick: "Contre les civilisations agressives (Français, Mongols, Anglais)." },
-                            { id: "cmd_serjeants", name: "Commanderie des Sergents", tag: "Tempo / Agression", color: "crimson", unlocks: ["Unité : Sergent Templier (infanterie lourde à masse et bouclier)", "Passif : +20% vitesse de production de l'infanterie"], advantage: "Offre une ligne de front ultra-solide dès 4:30 pour pousser avec des béliers.", whenToPick: "Pour mettre une pression frontale dès l'Âge Féodal." },
-                            { id: "cmd_france", name: "Commanderie du Royaume de France", tag: "Cavalerie & Raid", color: "amber", unlocks: ["Unité : Frère Chevalier (cavalerie lourde d'élite à charge renforcée)", "Passif : Technologies de cavalerie disponibles un âge plus tôt"], advantage: "Permet de raider l'économie adverse dès 4:30 avec une cavalerie lourde d'élite.", whenToPick: "Sur cartes ouvertes (Dry Arabia, Lipany) pour contrôler la carte." }
-                        ]
-                    },
-                    {
-                        age: "Âge II → Âge III (Châteaux)",
-                        options: [
-                            { id: "cmd_genoa", name: "Commanderie de Gênes", tag: "Distance / Anti-Armure", color: "blue", unlocks: ["Unité : Arbalétrier Génois (arbalétrier d'élite à pavois très résistant aux flèches)", "Passif : +15% dégâts des unités à distance"], advantage: "Contre parfaitement les Chevaliers et Hommes d'armes ennemis tout en gagnant les duels d'archers.", whenToPick: "Face aux civilisations blindées (SERG, Français, Japonais)." },
-                            { id: "cmd_antioch", name: "Commanderie d'Antioche", tag: "Assaut & Siège", color: "crimson", unlocks: ["Unité : Turcopole (archer monté rapide harcelant l'arrière-garde)", "Passif : Engins de siège +20% PV et vitesse de déplacement"], advantage: "Apporte une mobilité précieuse pour éliminer les mangonneaux et archerie ennemie.", whenToPick: "Contre les civilisations basées sur l'infanterie lente et l'artillerie." },
-                            { id: "cmd_castile", name: "Commanderie de Castille", tag: "Économie & Fortifications", color: "emerald", unlocks: ["Unité : Genetour (cavalier léger lanceur de javelots anti-archers)", "Passif : Pèlerins génèrent +25% d'or et Donjons moins chers"], advantage: "Propulse vos revenus passifs d'or et facilite le verrouillage de la carte par des Commanderies.", whenToPick: "Pour un jeu macro orienté contrôle de carte." }
-                        ]
-                    },
-                    {
-                        age: "Âge III → Âge IV (Impérial)",
-                        options: [
-                            { id: "cmd_teutonic", name: "Commanderie Teutonique", tag: "Infanterie Ultime", color: "crimson", unlocks: ["Unité : Chevalier Teutonique (infanterie super-lourde terrifiante réduisant l'attaque ennemie)", "Passif : +2 armure de mêlée à toute l'infanterie"], advantage: "Crée un rouleau compresseur d'infanterie quasi indestructible en mêlée.", whenToPick: "Dans les engagements frontaux denses." },
-                            { id: "cmd_venice", name: "Commanderie de Venise", tag: "Or Infini & Artillerie", color: "emerald", unlocks: ["Unité : Condottiere & Canons Vénitiens", "Passif : Génère un revenu d'or passif majeur pour chaque Commanderie et Site Sacré contrôlé"], advantage: "Assure un financement infini en or en fin de partie.", whenToPick: "Dans les longues guerres d'usure." },
-                            { id: "cmd_poland", name: "Commanderie de Pologne", tag: "Cavalerie Ultime", color: "amber", unlocks: ["Unité : Lancier de Szlachta (cavalerie lourde de choc)", "Passif : Dégâts de charge de toute la cavalerie +25%"], advantage: "Anéantit les lignes d'artillerie et d'archers ennemis en une seule charge.", whenToPick: "Sur cartes ouvertes pour conclure la partie par la mobilité." }
-                        ]
-                    }
+                archetype: "Allégeances de Commanderies & Assaut Blindé",
+                primaryThreat: "Passage d'âge sans immobiliser de villageois débloquant instantanément Frères Chevaliers, Sergents ou Hospitaliers à 4:20.",
+                threatWindow: "4:20 — 9:00 (Commanderie Féodale) & 11:00+ (Gênes / Teutoniques)",
+                recommendedCounterPlan: {
+                    unitPriority: "Lanciers + Archers à l'Âge II, puis Arbalétriers + Chameaux/Lanciers d'élite à l'Âge III pour percer les armures lourdes.",
+                    upgradePriority: "Attaque à distance (+1/+2) et améliorations anti-armure.",
+                    winCondition: "Identifiez quelle Commanderie a été choisie dès 4:20 (Hospitaliers = jeu long/reliques, France = raid chevaliers, Sergents = push infanterie) et coupez ses mines d'or externes."
+                },
+                events: [
+                    { time: "4:20", startPct: 19, widthPct: 22, type: "spike", label: "Power Spike 4:20–8:30", title: "1re Commanderie active sans perte de récolte", detail: "Pic de puissance immédiat dès la transition (Frères Chevaliers, Sergents ou Hospitaliers)." },
+                    { time: "8:30", startPct: 42, widthPct: 16, type: "vuln", label: "Vulnérabilité 8:30–11:00", title: "Forte dépendance à l'Or pour les unités croisées", detail: "Couper les mines d'or secondaires paralyse la production des Templiers." },
+                    { time: "11:00", startPct: 58, widthPct: 20, type: "spike", label: "Power Spike 11:00–15:00", title: "Commanderie de Gênes / Antioche + Pèlerins", detail: "Arbalétriers Génois à pavois ou Turcopoles très difficiles à contrer." },
+                    { time: "16:30+", startPct: 80, widthPct: 20, type: "spike", label: "Power Spike 16:30+", title: "Chevaliers Teutoniques / Canons Vénitiens", detail: "Armée impériale super-blindée." }
                 ]
             },
             golden_horde: {
-                mechanicLabel: "Pavillons de la Horde (2 choix par âge — Bâtiments mobiles comme les Mongols)",
-                specialNote: "Chaque pavillon amplifie la jauge de Butin de Guerre et la vitesse de production des escouades des steppes.",
-                stages: [
-                    {
-                        age: "Âge I → Âge II (Féodal)",
-                        options: [
-                            { id: "gh_khan_pavilion", name: "Pavillon du Khan", tag: "Tempo / Submersion", color: "crimson", unlocks: ["Accélère de +30% la production des escouades de Cavaliers des Steppes", "Double le gain de Butin lors des incendies"], advantage: "Permet d'inonder l'adversaire de cavaliers légers dès 4:45.", whenToPick: "Standard pour étouffer l'économie adverse dès l'Âge II." },
-                            { id: "gh_silk_camp", name: "Campement de la Soie", tag: "Économie / Pillage", color: "emerald", unlocks: ["Augmente la capacité de transport et la vitesse des Marchands et des convois de butin"], advantage: "Soutient une guerre prolongée sur plusieurs fronts.", whenToPick: "Sur cartes vastes ou en parties d'équipe." }
-                        ]
-                    },
-                    {
-                        age: "Âge II → Âge III (Châteaux)",
-                        options: [
-                            { id: "gh_noyan_tent", name: "Yourte du Noyan", tag: "Militaire / Commandement", color: "crimson", unlocks: ["Invoque immédiatement un Noyan (commandant lourd) et augmente son aura de dégâts"], advantage: "Transforme vos essaims légers en force de frappe capable de percer les lignes ennemies.", whenToPick: "Choix privilégié à l'Âge III pour maintenir la pression." },
-                            { id: "gh_sarai_mint", name: "Hôtel des Monnaies de Saraï", tag: "Boom Éco / Or", color: "emerald", unlocks: ["Convertit automatiquement une partie du Butin accumulé en or et pierre passifs"], advantage: "Permet de financer les améliorations d'Âge III sans ralentir la production d'unités.", whenToPick: "Si l'adversaire s'est muré et que le pillage est plus difficile." }
-                        ]
-                    },
-                    {
-                        age: "Âge III → Âge IV (Impérial)",
-                        options: [
-                            { id: "gh_great_yassa", name: "Pavillon du Grand Yassa", tag: "Armée Infinie", color: "crimson", unlocks: ["Réduit de 25% le coût de toutes les unités légères et déclenche des renforts gratuits deux fois plus souvent"], advantage: "Crée une marée humaine et équestre impossible à contenir.", whenToPick: "Pour submerger l'adversaire en fin de partie." },
-                            { id: "gh_astral_observatory", name: "Observatoire de Saraï", tag: "Siège & Poudre", color: "blue", unlocks: ["Débloque les Bombardes des Steppes et améliore la portée de siège"], advantage: "Permet enfin de raser les forteresses et murs en pierre ennemis.", whenToPick: "Contre les civilisations très fortifiées." }
-                        ]
-                    }
+                archetype: "Submersion des Steppes & Pillage Continu",
+                primaryThreat: "Vagues incessantes de Cavaliers des Steppes dès 4:30 déclenchant des renforts gratuits via la jauge de Butin.",
+                threatWindow: "4:30 — 10:00 (Marée des Steppes)",
+                recommendedCounterPlan: {
+                    unitPriority: "Lanciers + Archers groupés autour de vos ressources et palissades complètes autour de votre base.",
+                    upgradePriority: "+1/+2 Défense à distance et Textiles.",
+                    winCondition: "Ne laissez aucun bâtiment isolé (maisons, moulins) hors de vos murs pour ne pas nourrir sa jauge de Butin, puis contre-attaquez sa base sans remparts."
+                },
+                events: [
+                    { time: "4:30", startPct: 20, widthPct: 26, type: "spike", label: "Power Spike 4:30–10:00", title: "Essaim de Cavaliers des Steppes + Butin", detail: "Submersion numérique rapide sur plusieurs angles d'attaque." },
+                    { time: "10:30", startPct: 52, widthPct: 18, type: "vuln", label: "Vulnérabilité 10:30–14:00", title: "Essoufflement face aux armures lourdes et murs", detail: "Les cavaliers légers peinent à percer les Hommes d'armes, Chevaliers et remparts en pierre." },
+                    { time: "15:30+", startPct: 76, widthPct: 24, type: "spike", label: "Power Spike 15:30+", title: "Pavillon du Grand Yassa + Bombardes des Steppes", detail: "Vagues gratuites continues soutenues par l'artillerie." }
                 ]
             },
             macedonian: {
-                mechanicLabel: "Monuments Classiques + Points d'Hégémonie Militaire",
-                specialNote: "Chaque victoire en combat remplit votre jauge d'Hégémonie, boostant la discipline et la vitesse de vos Phalanges et Compagnons.",
-                stages: [
-                    {
-                        age: "Âge I → Âge II (Féodal)",
-                        options: [
-                            { id: "mac_pella", name: "Académie de Pella", tag: "Tempo / Phalange", color: "crimson", unlocks: ["Accélère la production des Phalangites et Hypaspistes de +25%", "Débloque les améliorations de Sarisse dès l'Âge II"], advantage: "Permet de verrouiller le centre de la carte dès 4:45 avec un mur de piques infranchissable.", whenToPick: "Standard pour prendre le contrôle territorial dès l'Âge II." },
-                            { id: "mac_royal_stud", name: "Haras Royal d'Émathie", tag: "Cavalerie & Éco", color: "emerald", unlocks: ["Réduit le coût de la cavalerie et améliore la récolte autour des pâturages et fermes"], advantage: "Prépare une transition rapide vers la cavalerie Compagnon à l'Âge III.", whenToPick: "Sur cartes ouvertes pour jouer la mobilité." }
-                        ]
-                    },
-                    {
-                        age: "Âge II → Âge III (Châteaux)",
-                        options: [
-                            { id: "mac_vergina", name: "Palais de Vergina", tag: "Cavalerie d'Élite", color: "amber", unlocks: ["Produit des Compagnons (Hetairoi) avec un bonus de charge accru et réduit leur coût"], advantage: "Débloque la pleine puissance de la tactique du Marteau et de l'Enclume.", whenToPick: "Choix privilégié à l'Âge III dans la majorité des parties." },
-                            { id: "mac_ampipolis", name: "Citadelle d'Amphipolis", tag: "Défense & Siège", color: "blue", unlocks: ["Forteresse avancée accélérant la production des engins de siège et renforçant l'armure des Phalanges"], advantage: "Ancrage solide pour pousser lentement mais sûrement vers la base ennemie.", whenToPick: "Sur cartes fermées ou à goulets d'étranglement." }
-                        ]
-                    },
-                    {
-                        age: "Âge III → Âge IV (Impérial)",
-                        options: [
-                            { id: "mac_alexandria", name: "Phare d'Alexandrie", tag: "Vision & Économie", color: "emerald", unlocks: ["Révèle une vaste zone de la carte et augmente les revenus commerciaux et maritimes de +30%"], advantage: "Assure une supériorité de renseignement et d'or en fin de partie.", whenToPick: "Pour contrôler les ressources de fin de partie." },
-                            { id: "mac_trophy_gaugamela", name: "Trophée de Gaugamèles", tag: "Assaut Ultime", color: "crimson", unlocks: ["Double le gain d'Hégémonie et confère +20% d'attaque à toute l'armée après chaque victoire"], advantage: "Effet boule de neige dévastateur lors des grandes batailles.", whenToPick: "Pour enfoncer définitivement les lignes adverses." }
-                        ]
-                    }
+                archetype: "Phalanges Sarisses & Frappes de Compagnons",
+                primaryThreat: "Verrouillage du centre de carte par des Phalangites à longue portée soutenus par les charges de flanc des Compagnons.",
+                threatWindow: "6:00 — 12:00 (Phalanges + Compagnons)",
+                recommendedCounterPlan: {
+                    unitPriority: "Archers en masse à l'Âge II, puis Mangonneaux + Arbalétriers à l'Âge III (les Phalanges sont lentes et vulnérables aux dégâts de zone).",
+                    upgradePriority: "Balistique et +1/+2 Attaque à distance.",
+                    winCondition: "Évitez tout engagement frontal de cavalerie contre les Phalangites : utilisez des Archers pour les affaiblir à distance et des Mangonneaux dès l'Âge III."
+                },
+                events: [
+                    { time: "5:00", startPct: 24, widthPct: 22, type: "spike", label: "Power Spike 5:00–9:30", title: "Mur de Phalangites (Académie de Pella)", detail: "Contrôle territorial très fort contre toute civ de cavalerie." },
+                    { time: "9:30", startPct: 47, widthPct: 15, type: "vuln", label: "Vulnérabilité 9:30–12:00", title: "Lenteur de manœuvre des Phalanges", detail: "Vulnérable aux raids rapides sur les ressources périphériques et aux premiers Mangonneaux." },
+                    { time: "12:30+", startPct: 62, widthPct: 38, type: "spike", label: "Power Spike 12:30+", title: "Marteau & Enclume (Phalanges + Compagnons)", detail: "Bonus d'Hégémonie décuplant la vitesse et l'impact en bataille rangée." }
                 ]
             },
             sengoku: {
-                mechanicLabel: "Monuments de Guerre + Allégeance des Grands Clans à chaque passage d'âge",
-                specialNote: "En plus du monument, chaque transition vous permet de prêter allégeance à un clan historique (Oda, Takeda, Tokugawa, Uesugi).",
-                stages: [
-                    {
-                        age: "Âge I → Âge II (Féodal)",
-                        options: [
-                            { id: "sen_war_pavilion", name: "Pavillon de Guerre Sengoku", tag: "Tempo / Masse Ashigaru", color: "crimson", unlocks: ["Réduit de 15% le coût des Ashigaru Yari et Archers", "Augmente le bonus de formation serrée"], advantage: "Permet de submerger l'adversaire par des rangs disciplinés d'Ashigaru dès l'Âge II.", whenToPick: "Standard pour un jeu agressif et expansif." },
-                            { id: "sen_rice_exchange", name: "Bourse au Riz d'Osaka", tag: "Boom Éco", color: "emerald", unlocks: ["Améliore le rendement des fermes et permet d'échanger nourriture contre or à taux avantageux"], advantage: "Sécurise le financement des Arquebusiers Tanegashima à l'Âge III.", whenToPick: "Pour un développement économique rapide." }
-                        ]
-                    },
-                    {
-                        age: "Âge II → Âge III (Châteaux)",
-                        options: [
-                            { id: "sen_nagashino", name: "Palissade de Nagashino", tag: "Poudre / Anti-Cavalerie", color: "blue", unlocks: ["Débloque immédiatement les Arquebusiers Tanegashima avec cadence de tir accrue et palissades défensives"], advantage: "Anéantit les charges de chevaliers et fait fondre les armures lourdes dès 8:00.", whenToPick: "Face aux civilisations de cavalerie ou d'infanterie lourde." },
-                            { id: "sen_azuchi", name: "Donjon d'Azuchi", tag: "Contrôle Map & Clans", color: "amber", unlocks: ["Château japonais accélérant le recrutement des unités spéciales de clan (Cavalerie Rouge Takeda / Moines Uesugi)"], advantage: "Verrouille le centre de la carte tout en produisant vos troupes d'élite.", whenToPick: "Pour ancrer votre progression territoriale." }
-                        ]
-                    },
-                    {
-                        age: "Âge III → Âge IV (Impérial)",
-                        options: [
-                            { id: "sen_osaka_castle", name: "Grand Château d'Osaka", tag: "Défense Ultime", color: "blue", unlocks: ["Forteresse imprenable équipée d'artillerie à poudre et boostant l'armure des Ashigaru proches"], advantage: "Quasi impossible à détruire sans une artillerie massive.", whenToPick: "Pour verrouiller la carte en fin de partie." },
-                            { id: "sen_unification_shrine", name: "Sanctuaire de l'Unification", tag: "Synergie des Clans", color: "crimson", unlocks: ["Active simultanément les bonus des deux clans précédemment choisis"], advantage: "Combine par exemple la puissance de feu Oda et la charge de cavalerie Takeda.", whenToPick: "Pour un pic de puissance militaire total à l'Âge Impérial." }
-                        ]
-                    }
+                archetype: "Masses d'Ashigaru & Salves Tanegashima",
+                primaryThreat: "Formations serrées d'Ashigaru Yari + Arquebusiers Tanegashima à l'Âge III faisant fondre cavalerie et infanterie lourde.",
+                threatWindow: "8:00 — 14:00 (Palissade de Nagashino & Arquebusiers)",
+                recommendedCounterPlan: {
+                    unitPriority: "Archers à longue portée à l'Âge II, puis Mangonneaux / Nids d'Abeilles dès l'Âge III (les formations serrées d'Ashigaru prennent d'énormes dégâts de zone).",
+                    upgradePriority: "+1/+2 Défense à distance et Balistique.",
+                    winCondition: "Déployez 2 ou 3 Mangonneaux dès l'Âge III pour punir le regroupement serré des Ashigaru."
+                },
+                events: [
+                    { time: "5:00", startPct: 24, widthPct: 18, type: "spike", label: "Power Spike 5:00–8:00", title: "Masse Ashigaru Yari + Bonus de Clan", detail: "Pression économique et militaire soutenue en début de partie." },
+                    { time: "8:30", startPct: 42, widthPct: 24, type: "spike", label: "Power Spike 8:30–14:00", title: "Arquebusiers Tanegashima en salves volantes", detail: "Détruit rapidement les Chevaliers et Hommes d'armes." },
+                    { time: "14:00", startPct: 68, widthPct: 14, type: "vuln", label: "Vulnérabilité 14:00–17:00", title: "Sensibilité à l'artillerie de zone", detail: "Si l'adversaire protège bien ses Mangonneaux, les Ashigaru peinent à approcher." }
                 ]
             },
             tughlaq: {
-                mechanicLabel: "Monuments Fortifiés (2 choix par âge — Renforcent les Bastions et Éléphants Cuirassés)",
-                specialNote: "Toutes les unités produites à proximité d'un monument ou d'un donjon Tughlaq bénéficient d'une réduction de coût.",
-                stages: [
-                    {
-                        age: "Âge I → Âge II (Féodal)",
-                        options: [
-                            { id: "tug_gate", name: "Porte de Tughlaqabad", tag: "Défense & Éco", color: "blue", unlocks: ["Agit comme un Avant-poste fortifié et augmente les revenus fiscaux des bâtiments proches"], advantage: "Protège parfaitement votre base pendant que vous préparez l'arrivée des Éléphants.", whenToPick: "Standard sur la majorité des cartes." },
-                            { id: "tug_siri", name: "Citadelle de Siri", tag: "Tempo / Infanterie", color: "crimson", unlocks: ["Accélère la production des Gardes du Sultan et réduit le coût des améliorations de forge"], advantage: "Permet de repousser les pushs féodaux ou de contre-attaquer avec une infanterie lourde.", whenToPick: "Contre un rush agressif." }
-                        ]
-                    },
-                    {
-                        age: "Âge II → Âge III (Châteaux)",
-                        options: [
-                            { id: "tug_elephant_stable", name: "Écurie Impériale d'Éléphants", tag: "Éléphants Cuirassés", color: "crimson", unlocks: ["Produit des Éléphants Cuirassés 25% plus vite et débloque gratuitement les plaques de bronze"], advantage: "Déploie des colosses blindés quasi insensibles aux flèches dès l'entrée à l'Âge III.", whenToPick: "Choix privilégié dans 85% des parties." },
-                            { id: "tug_jahanpanah", name: "Remparts de Jahanpanah", tag: "Contrôle Map", color: "emerald", unlocks: ["Réduit de 35% le coût en pierre des Donjons et Murs, et augmente leur puissance de feu"], advantage: "Permet de verrouiller la carte avec des forteresses à bas coût.", whenToPick: "Sur cartes fermées ou à passages étroits." }
-                        ]
-                    },
-                    {
-                        age: "Âge III → Âge IV (Impérial)",
-                        options: [
-                            { id: "tug_qutb", name: "Complexe du Qutb", tag: "Artillerie & Éléphants", color: "crimson", unlocks: ["Débloque les Éléphants à Couleuvrine et augmente de +20% les dégâts de tous les éléphants"], advantage: "Écrase les lignes d'artillerie et les forteresses ennemies en fin de partie.", whenToPick: "Pour mener l'assaut final." },
-                            { id: "tug_firoz_shah", name: "Palais de Firoz Shah", tag: "Boom Éco", color: "emerald", unlocks: ["Génère passivement de l'or et de la nourriture en fonction du nombre de fortifications contrôlées"], advantage: "Finance l'entretien coûteux de votre armée d'éléphants en fin de partie.", whenToPick: "Dans les longues guerres d'attrition." }
-                        ]
-                    }
+                archetype: "Bastions Fortifiés & Éléphants Cuirassés",
+                primaryThreat: "Avancée méthodique protégée par des Donjons Tughlaq suivie d'Éléphants Cuirassés quasi insensibles aux archers.",
+                threatWindow: "10:00 — 20:00+ (Éléphants Cuirassés & Couleuvrines)",
+                recommendedCounterPlan: {
+                    unitPriority: "Lanciers + Arbalétriers + EsSpringales (et Moines pour convertir les éléphants !).",
+                    upgradePriority: "Attaque à distance (+1/+2) et améliorations des Arbalétriers.",
+                    winCondition: "Exploitez la lenteur des éléphants en attaquant les flancs économiques de la base Tughlaq avant 9:30."
+                },
+                events: [
+                    { time: "4:30", startPct: 21, widthPct: 22, type: "vuln", label: "Vulnérabilité 4:30–8:30", title: "Début de partie lent et défensif", detail: "Le Tughlaq n'a aucune menace mobile en début de partie : prenez tout le contrôle de la carte et des Reliques." },
+                    { time: "9:30", startPct: 47, widthPct: 24, type: "spike", label: "Power Spike 9:30–15:00", title: "Éléphants Cuirassés avec plaques de bronze", detail: "Enfonce les lignes d'archers et d'infanterie." },
+                    { time: "16:30+", startPct: 80, widthPct: 20, type: "spike", label: "Power Spike 16:30+", title: "Éléphants à Couleuvrine + Complexe du Qutb", detail: "Armée blindée complète avec artillerie mobile." }
                 ]
             },
             jin: {
-                mechanicLabel: "Monuments Jurchens (2 choix par âge — Axés sur la chasse, la cavalerie liée et la poudre)",
-                specialNote: "Les monuments Jin renforcent la formation serrée des Tie Futu et l'efficacité des bombes incendiaires Zhentianlei.",
-                stages: [
-                    {
-                        age: "Âge I → Âge II (Féodal)",
-                        options: [
-                            { id: "jin_bianjing", name: "Forteresse de Bianjing", tag: "Défense & Fast Castle", color: "blue", unlocks: ["Avant-poste fortifié équipé de balistes et augmentant le rendement de la chasse proche (+25%)"], advantage: "Sécurise votre transition rapide vers l'Âge III et les Tie Futu.", whenToPick: "Standard sur la majorité des cartes terrestres." },
-                            { id: "jin_jurchen_camp", name: "Campement de Cavalerie Jurchen", tag: "Tempo / Harcèlement", color: "crimson", unlocks: ["Produit des Cavaliers légers et Archers montés 20% plus vite"], advantage: "Permet de contester la carte et de chasser les villageois isolés dès l'Âge II.", whenToPick: "Sur cartes ouvertes pour garder l'initiative." }
-                        ]
-                    },
-                    {
-                        age: "Âge II → Âge III (Châteaux)",
-                        options: [
-                            { id: "jin_iron_pagoda", name: "Pagode de Fer", tag: "Cavalerie Tie Futu", color: "crimson", unlocks: ["Produit des Tie Futu (cavalerie cuirassée) à coût réduit et améliore leur résistance aux flèches en formation liée"], advantage: "Permet de briser n'importe quelle ligne d'archers ou d'infanterie à l'Âge III.", whenToPick: "Choix privilégié dans 85% des parties." },
-                            { id: "jin_thunder_arsenal", name: "Arsenal du Tonnerre", tag: "Poudre & Zone", color: "amber", unlocks: ["Débloque les Bombardiers Zhentianlei avec rayon d'explosion accru et dégâts incendiaires sur les bâtiments"], advantage: "Dévaste les formations serrées d'infanterie et rase rapidement les avant-postes.", whenToPick: "Contre les civilisations basées sur des masses d'infanterie (Chinois, Sengoku, SERG)." }
-                        ]
-                    },
-                    {
-                        age: "Âge III → Âge IV (Impérial)",
-                        options: [
-                            { id: "jin_supreme_palace", name: "Palais Suprême de Zhongdu", tag: "Économie & Commandement", color: "emerald", unlocks: ["Génère de l'or passif et confère une aura d'armure à toute la cavalerie proche"], advantage: "Maintient le financement de vos Tie Futu d'élite en fin de partie.", whenToPick: "Dans les parties longues." },
-                            { id: "jin_dragon_foundry", name: "Fonderie du Dragon de Feu", tag: "Artillerie Incendiaire", color: "crimson", unlocks: ["Équipe toutes vos bombardes et trébuchets de munitions incendiaires laissant des flammes au sol"], advantage: "Interdit le terrain à l'armée ennemie et détruit les fortifications en quelques salves.", whenToPick: "Pour percer les défenses ennemies." }
-                        ]
-                    }
+                archetype: "Cavalerie Liée Tie Futu & Bombes Incendiaires",
+                primaryThreat: "Charges de Tie Futu cuirassés (impermeables aux flèches en formation liée) soutenues par les bombes de zone Zhentianlei.",
+                threatWindow: "8:30 — 15:00 (Tie Futu & Bombardiers Zhentianlei)",
+                recommendedCounterPlan: {
+                    unitPriority: "Arbalétriers + Lanciers espacés (pour limiter les dégâts de zone des bombes incendiaires), soutenus par des EsSpringales.",
+                    upgradePriority: "Attaque à distance (+1/+2) et Formation dispersée.",
+                    winCondition: "Agressez l'économie Jin à l'Âge II avant 7:30 pendant qu'elle économise pour ses Tie Futu coûteux."
+                },
+                events: [
+                    { time: "4:30", startPct: 21, widthPct: 18, type: "vuln", label: "Vulnérabilité 4:30–7:30", title: "Montée vers l'Âge III pour les Tie Futu", detail: "Fenêtre idéale pour harceler les camps de chasse et mines d'or Jin." },
+                    { time: "8:30", startPct: 42, widthPct: 26, type: "spike", label: "Power Spike 8:30–15:00", title: "Tie Futu (Pagode de Fer) + Bombes Zhentianlei", detail: "Brise les formations d'infanterie et d'archers." },
+                    { time: "16:30+", startPct: 80, widthPct: 20, type: "spike", label: "Power Spike 16:30+", title: "Artillerie Incendiaire (Fonderie du Dragon)", detail: "Interdiction de zone par les flammes et destruction rapide des bases." }
                 ]
             },
             vikings: {
-                mechanicLabel: "Monuments Nordiques (2 choix par âge — Synergie avec les Drakkars et le Pillage)",
-                specialNote: "Chaque bâtiment ennemi incendié rapporte de l'or et du bois ; vos monuments amplifient ces gains ou renforcent vos troupes.",
-                stages: [
-                    {
-                        age: "Âge I → Âge II (Féodal)",
-                        options: [
-                            { id: "vik_jarl_hall", name: "Salle du Jarl", tag: "Tempo / Huscarls", color: "crimson", unlocks: ["Agit comme une Caserne produisant des Huscarls 25% plus vite", "Augmente de +50% le butin d'or obtenu lors du pillage"], advantage: "Déploie des Huscarls à bouclier dès 4:40 pour encaisser les tirs et raser les bâtiments ennemis.", whenToPick: "Standard sur terre comme sur cartes hybrides." },
-                            { id: "vik_great_harbor", name: "Grand Havre de Hedeby", tag: "Domination Navale", color: "blue", unlocks: ["Produit des Drakkars et navires de guerre 30% plus vite et réduit leur coût en bois"], advantage: "Verrouille totalement les mers et lacs dès l'Âge II.", whenToPick: "Indispensable sur Archipel, Four Lakes et cartes maritimes." }
-                        ]
-                    },
-                    {
-                        age: "Âge II → Âge III (Châteaux)",
-                        options: [
-                            { id: "vik_valhalla_shrine", name: "Sanctuaire des Scaldes", tag: "Militaire / Berserkers", color: "crimson", unlocks: ["Confère une régénération de PV hors combat à toute l'infanterie et augmente la fureur des Berserkers"], advantage: "Permet à vos troupes de raid de se soigner entre chaque débarquement ou escarmouche.", whenToPick: "Choix privilégié à l'Âge III pour soutenir les raids continus." },
-                            { id: "vik_thing_assembly", name: "Assemblée du Thing", tag: "Boom Éco / Commerce", color: "emerald", unlocks: ["Agit comme un Forum et augmente les revenus des bateaux de pêche et marchands de +25%"], advantage: "Propulse votre économie en milieu de partie.", whenToPick: "Pour consolider votre avance économique." }
-                        ]
-                    },
-                    {
-                        age: "Âge III → Âge IV (Impérial)",
-                        options: [
-                            { id: "vik_borg_fortress", name: "Forteresse Circulaire (Trelleborg)", tag: "Défense & Mobilisation", color: "blue", unlocks: ["Forteresse massive permettant de téléporter ou déployer rapidement des renforts de Huscarls"], advantage: "Protège efficacement votre base principale en fin de partie.", whenToPick: "Contre les contre-attaques terrestres." },
-                            { id: "vik_great_heathen_camp", name: "Camp de la Grande Armée", tag: "Assaut Final", color: "crimson", unlocks: ["Réduit de 20% le coût de toute l'infanterie et octroie un bonus de dégâts contre les bâtiments"], advantage: "Transforme vos Berserkers et Huscarls en véritables béliers humains.", whenToPick: "Pour conclure la partie par un assaut total." }
-                        ]
-                    }
+                archetype: "Domination Maritime & Raids Éclairs Huscarls",
+                primaryThreat: "Contrôle total des mers/lacs dès l'Âge I via les Drakkars et débarquements d'Huscarls à bouclier générant de l'or au pillage.",
+                threatWindow: "3:00 — 9:30 (Drakkars & Raids Huscarls)",
+                recommendedCounterPlan: {
+                    unitPriority: "Navires incendiaires sur l'eau ; sur terre, Hommes d'armes + Arbalétriers (les Vikings n'ont pas de cavalerie lourde !).",
+                    upgradePriority: "Attaque en mêlée et fortifications côtières (Tours).",
+                    winCondition: "Sur carte terrestre, imposez des combats rangés à l'Âge III avec Chevaliers + Arbalétriers ; sur carte hybride, contestez les ports dès l'Âge I."
+                },
+                events: [
+                    { time: "2:30", startPct: 12, widthPct: 24, type: "spike", label: "Power Spike 2:30–8:30", title: "Drakkars & Débarquements d'Huscarls", detail: "Pillage rapide des bâtiments côtiers et contrôle de la pêche." },
+                    { time: "11:00", startPct: 54, widthPct: 22, type: "vuln", label: "Vulnérabilité 11:00–16:00", title: "Absence de Cavalerie Lourde sur terre", detail: "En combat terrestre pur en milieu/fin de partie, les Vikings souffrent face au duo Chevaliers + Arbalétriers." },
+                    { time: "16:00+", startPct: 78, widthPct: 22, type: "spike", label: "Power Spike 16:00+", title: "Berserkers d'élite + Camp de la Grande Armée", detail: "Assaut d'infanterie dévastateur contre les bâtiments." }
                 ]
             },
             scottish: {
-                mechanicLabel: "Monuments des Highlands (2 choix par âge — Renforcent le Schiltron et les Cornemuses)",
-                specialNote: "Les monuments écossais étendent l'aura des Joueurs de Cornemuse et renforcent la solidité défensive de votre infanterie.",
-                stages: [
-                    {
-                        age: "Âge I → Âge II (Féodal)",
-                        options: [
-                            { id: "sco_stirling", name: "Château de Stirling", tag: "Défense & Schiltron", color: "blue", unlocks: ["Avant-poste fortifié augmentant l'armure des Piquiers Schiltron proches", "Produit un Joueur de Cornemuse gratuit"], advantage: "Rend vos lignes de piques infranchissables dès 4:40.", whenToPick: "Standard pour sécuriser le centre de la carte ou défendre contre la cavalerie." },
-                            { id: "sco_scone", name: "Abbaye de Scone", tag: "Boom Éco / Moutons", color: "emerald", unlocks: ["Génère passivement des moutons et augmente de +20% la récolte de nourriture et de bois"], advantage: "Assure une économie très fluide pour masser piquiers et archers.", whenToPick: "Sur cartes fermées ou pour un développement économique rapide." }
-                        ]
-                    },
-                    {
-                        age: "Âge II → Âge III (Châteaux)",
-                        options: [
-                            { id: "sco_edinburgh", name: "Forteresse d'Édimbourg", tag: "Highlanders & Contrôle", color: "crimson", unlocks: ["Donjon produisant des Highlanders à Claymore 25% plus vite avec bonus de vitesse de charge"], advantage: "Permet de déployer rapidement une infanterie lourde dévastatrice en mêlée.", whenToPick: "Choix privilégié à l'Âge III pour mener l'offensive." },
-                            { id: "sco_glasgow", name: "Université de Glasgow", tag: "Tech & Artillerie", color: "amber", unlocks: ["Réduit de 25% le coût des améliorations de forge et d'engins de siège"], advantage: "Permet de soutenir vos Highlanders avec des EsSpringales et Mangonneaux à moindre coût.", whenToPick: "Contre les civilisations basées sur les archers longue portée." }
-                        ]
-                    },
-                    {
-                        age: "Âge III → Âge IV (Impérial)",
-                        options: [
-                            { id: "sco_bannockburn", name: "Monument de Bannockburn", tag: "Aura Globale", color: "crimson", unlocks: ["Double le rayon d'action des Joueurs de Cornemuse et confère +20% de dégâts contre la cavalerie"], advantage: "Rend votre armée écossaise quasi invincible en combat rangé.", whenToPick: "Pour remporter les batailles décisives." },
-                            { id: "sco_royal_mile", name: "Palais de Holyrood", tag: "Économie Ultime", color: "emerald", unlocks: ["Génère de l'or passif et réduit le coût en or de toutes les unités d'élite"], advantage: "Maintient la production continue de Highlanders et d'artillerie en fin de partie.", whenToPick: "Dans les longues guerres d'attrition." }
-                        ]
-                    }
+                archetype: "Murs de Piques Schiltron & Charge Highlanders",
+                primaryThreat: "Verrouillage des positions par les Piquiers Schiltron + Cornemuses suivi des charges brutales des Highlanders à Claymore.",
+                threatWindow: "5:00 — 13:00 (Schiltron + Highlanders)",
+                recommendedCounterPlan: {
+                    unitPriority: "Archers longue portée à l'Âge II, puis Arbalétriers + Mangonneaux dès l'Âge III (les formations Schiltron statiques sont des cibles idéales).",
+                    upgradePriority: "Balistique et +1/+2 Attaque à distance.",
+                    winCondition: "Ne chargez jamais une formation Schiltron avec votre cavalerie : kitez l'infanterie écossaise à distance et snipez les Joueurs de Cornemuse."
+                },
+                events: [
+                    { time: "5:00", startPct: 24, widthPct: 22, type: "spike", label: "Power Spike 5:00–10:00", title: "Schiltron + Joueur de Cornemuse (Stirling)", detail: "Invulnérable aux charges de cavalerie et très solide en défense." },
+                    { time: "10:00", startPct: 48, widthPct: 22, type: "spike", label: "Power Spike 10:00–14:30", title: "Charge des Highlanders à Claymore", detail: "Dégâts massifs en mêlée si l'infanterie atteint le contact." },
+                    { time: "14:30+", startPct: 72, widthPct: 28, type: "vuln", label: "Vulnérabilité 14:30+", title: "Manque de cavalerie lourde & sensibilité à l'artillerie", detail: "Vulnérable aux Mangonneaux et aux contournements rapides sur les cartes ouvertes." }
                 ]
             }
         };
@@ -2987,6 +2761,8 @@
             selectedStyle: "ALL",
             checkedSteps: {}, // { civId_stepIndex: boolean }
             selectedAgePlan: {}, // { civId: { 0: optionId, 1: optionId, 2: optionId } }
+            loadingScreenMyCiv: "english",
+            loadingScreenEnemyCiv: "french",
             timerInterval: null,
             timerSeconds: 0,
             timerRunning: false
@@ -2998,6 +2774,7 @@
             selectCivilization("english");
             setupEventListeners();
             populateCompareSelects();
+            populateLoadingScreenSelects();
             lucide.createIcons();
         });
 
@@ -3428,6 +3205,9 @@
                         </div>
                     </div>
 
+                    <!-- Frise Chronologique des Timings Critiques & Power Spikes -->
+                    ${renderTimingsTimelineComponent(civ)}
+
                     <!-- Grille Points Forts / Points Faibles -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Points Forts -->
@@ -3729,8 +3509,342 @@
                             `;
                         }).join("")}
                     </div>
+
+                    <!-- Frise des Timings & Fenêtres de Puissance -->
+                    ${renderTimingsTimelineComponent(civ)}
                 </div>
             `;
+        }
+
+        // =========================================================================
+        // COMPOSANT : FRISE CHRONOLOGIQUE DES TIMINGS CRITIQUES & POWER SPIKES
+        // =========================================================================
+        function renderTimingsTimelineComponent(civ, compactTitle = null) {
+            const timingData = CIV_TIMINGS_DATA[civ.id];
+            if (!timingData) return "";
+
+            const typeConfig = {
+                spike: {
+                    badge: "bg-emeraldAccent/15 text-emeraldAccent border-emeraldAccent/40",
+                    bar: "bg-emeraldAccent/80 border-emeraldAccent",
+                    icon: "zap",
+                    tag: "Pic de Puissance"
+                },
+                vuln: {
+                    badge: "bg-crimsonAccent/15 text-crimsonAccent border-crimsonAccent/40",
+                    bar: "bg-crimsonAccent/80 border-crimsonAccent",
+                    icon: "alert-triangle",
+                    tag: "Fenêtre de Vulnérabilité"
+                },
+                scout: {
+                    badge: "bg-sky-500/15 text-sky-300 border-sky-500/40",
+                    bar: "bg-sky-500/80 border-sky-400",
+                    icon: "eye",
+                    tag: "Repère Scouting"
+                }
+            };
+
+            const timeMarkers = ["0:00", "4:00", "7:00", "10:00", "15:00", "20:00+"];
+
+            return `
+                <div class="bg-slateCard rounded-2xl border border-slate-800/90 p-5 sm:p-6 space-y-5">
+                    <!-- En-tête Frise -->
+                    <div class="flex flex-wrap items-center justify-between gap-3">
+                        <div class="flex items-center gap-2.5">
+                            <div class="p-2 rounded-lg bg-amberAccent/10 border border-amberAccent/30 text-amberAccent">
+                                <i data-lucide="activity" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-display text-base sm:text-lg font-bold text-white">
+                                    ${compactTitle || `Frise des Timings Critiques & Power Spikes (${civ.name})`}
+                                </h3>
+                                <p class="text-xs text-slate-400">Rythme de la partie de 0:00 à 20:00+ : fenêtres d'attaque, moments de faiblesse et repères de scouting</p>
+                            </div>
+                        </div>
+
+                        <!-- Légende -->
+                        <div class="flex flex-wrap items-center gap-2 text-[11px] font-medium">
+                            <span class="px-2.5 py-1 rounded-md bg-emeraldAccent/15 text-emeraldAccent border border-emeraldAccent/30">⚡ Pic de Puissance</span>
+                            <span class="px-2.5 py-1 rounded-md bg-crimsonAccent/15 text-crimsonAccent border border-crimsonAccent/30">⚠️ Vulnérabilité</span>
+                            <span class="px-2.5 py-1 rounded-md bg-sky-500/15 text-sky-300 border border-sky-500/30">👁️ Scouting</span>
+                        </div>
+                    </div>
+
+                    <!-- Barre Visuelle Horizontale 0:00 -> 20:00+ -->
+                    <div class="bg-slateDeep/90 rounded-xl p-4 border border-slate-800 space-y-2.5">
+                        <div class="flex justify-between text-[11px] font-mono text-slate-400 px-1">
+                            ${timeMarkers.map(m => `<span>${m}</span>`).join("")}
+                        </div>
+                        <div class="relative h-8 bg-slateCard rounded-lg border border-slate-800/90 overflow-hidden flex items-center">
+                            <!-- Lignes repères verticales -->
+                            <div class="absolute inset-0 grid grid-cols-5 pointer-events-none">
+                                <div class="border-r border-slate-800/80"></div>
+                                <div class="border-r border-slate-800/80"></div>
+                                <div class="border-r border-slate-800/80"></div>
+                                <div class="border-r border-slate-800/80"></div>
+                                <div></div>
+                            </div>
+                            <!-- Blocs de fenêtres temporelles -->
+                            ${timingData.events.map(ev => {
+                                const cfg = typeConfig[ev.type] || typeConfig.spike;
+                                return `
+                                    <div style="left: ${ev.startPct}%; width: ${ev.widthPct}%;"
+                                        title="${ev.label} : ${ev.title}"
+                                        class="absolute h-5 rounded-md border ${cfg.bar} flex items-center justify-center px-1.5 text-[10px] font-bold text-slateDeep truncate shadow-sm">
+                                        ${ev.time}
+                                    </div>
+                                `;
+                            }).join("")}
+                        </div>
+                    </div>
+
+                    <!-- Cartes détaillées des moments clés -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                        ${timingData.events.map(ev => {
+                            const cfg = typeConfig[ev.type] || typeConfig.spike;
+                            return `
+                                <div class="bg-slateDeep/80 rounded-xl p-4 border border-slate-800/90 hover:border-slate-700 transition space-y-2">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-[11px] font-bold border ${cfg.badge}">
+                                            <i data-lucide="${cfg.icon}" class="w-3 h-3"></i>
+                                            <span>${ev.label}</span>
+                                        </span>
+                                        <span class="text-[11px] font-semibold text-slate-400">${cfg.tag}</span>
+                                    </div>
+                                    <h4 class="font-semibold text-sm text-white">${ev.title}</h4>
+                                    <p class="text-xs text-slate-300 leading-relaxed">${ev.detail}</p>
+                                </div>
+                            `;
+                        }).join("")}
+                    </div>
+                </div>
+            `;
+        }
+
+        // =========================================================================
+        // MODE ÉCRAN DE CHARGEMENT : PLANIFICATEUR DE MATCHUP (MA CIV VS ADVERSAIRE)
+        // =========================================================================
+        function populateLoadingScreenSelects() {
+            const selMy = document.getElementById("ls-select-my-civ");
+            const selEnemy = document.getElementById("ls-select-enemy-civ");
+            if (!selMy || !selEnemy) return;
+
+            const optionsHtml = CIVILIZATIONS.map(c => `<option value="${c.id}">${c.emblem} ${c.name} (${c.dlc})</option>`).join("");
+            selMy.innerHTML = optionsHtml;
+            selEnemy.innerHTML = optionsHtml;
+
+            selMy.value = state.loadingScreenMyCiv;
+            selEnemy.value = state.loadingScreenEnemyCiv;
+
+            selMy.addEventListener("change", (e) => {
+                state.loadingScreenMyCiv = e.target.value;
+                renderLoadingScreenBriefing();
+            });
+            selEnemy.addEventListener("change", (e) => {
+                state.loadingScreenEnemyCiv = e.target.value;
+                renderLoadingScreenBriefing();
+            });
+
+            renderLoadingScreenBriefing();
+        }
+
+        function openLoadingScreenModal(defaultMyCivId = null) {
+            if (defaultMyCivId) {
+                state.loadingScreenMyCiv = defaultMyCivId;
+                const selMy = document.getElementById("ls-select-my-civ");
+                if (selMy) selMy.value = defaultMyCivId;
+            }
+            renderLoadingScreenBriefing();
+            const modal = document.getElementById("loading-screen-modal");
+            modal.classList.remove("hidden");
+            modal.classList.add("flex");
+            lucide.createIcons();
+        }
+
+        function closeLoadingScreenModal() {
+            const modal = document.getElementById("loading-screen-modal");
+            modal.classList.add("hidden");
+            modal.classList.remove("flex");
+        }
+
+        function renderLoadingScreenBriefing() {
+            const container = document.getElementById("loading-screen-content");
+            if (!container) return;
+
+            const myCiv = CIVILIZATIONS.find(c => c.id === state.loadingScreenMyCiv) || CIVILIZATIONS[0];
+            const enemyCiv = CIVILIZATIONS.find(c => c.id === state.loadingScreenEnemyCiv) || CIVILIZATIONS[1];
+            const myTiming = CIV_TIMINGS_DATA[myCiv.id];
+            const enemyTiming = CIV_TIMINGS_DATA[enemyCiv.id];
+            const myAgeUps = AGE_UPS_DATA[myCiv.id];
+
+            // Déterminer le verdict statistique du matchup
+            let verdictLabel = "Matchup Équilibré (50 / 50)";
+            let verdictBadge = "bg-amberAccent/15 text-amberAccent border-amberAccent/40";
+            let verdictNote = "L'exécution du build order, le contrôle des ressources externes et le scouting décideront de l'issue.";
+
+            const favMatch = myCiv.matchups.favorable.find(m => m.civ.toLowerCase().includes(enemyCiv.name.toLowerCase()));
+            const diffMatch = myCiv.matchups.difficult.find(m => m.civ.toLowerCase().includes(enemyCiv.name.toLowerCase()));
+
+            if (myCiv.id === enemyCiv.id) {
+                verdictLabel = "Match Miroir (100% Tempo & Micro)";
+                verdictBadge = "bg-royalBlue/15 text-royalBlue border-royalBlue/40";
+                verdictNote = "Dans un match miroir, celui qui prend l'initiative sur l'or ou sécurise le contrôle des reliques/sites sacrés prend l'avantage.";
+            } else if (favMatch) {
+                verdictLabel = "Matchup Favorable (Avantage Tactique)";
+                verdictBadge = "bg-emeraldAccent/15 text-emeraldAccent border-emeraldAccent/40";
+                verdictNote = favMatch.reason;
+            } else if (diffMatch) {
+                verdictLabel = "Matchup Difficile (Vigilance Maximale)";
+                verdictBadge = "bg-crimsonAccent/15 text-crimsonAccent border-crimsonAccent/40";
+                verdictNote = diffMatch.reason;
+            }
+
+            // Recommandation de Monument / Commanderie / Aile pour Ma Civ
+            const recommendedAge2 = myAgeUps && myAgeUps.stages[0] ? myAgeUps.stages[0].options[0] : null;
+            const recommendedAge3 = myAgeUps && myAgeUps.stages[1] ? myAgeUps.stages[1].options[0] : null;
+
+            container.innerHTML = `
+                <!-- Bannière Verdict du Duel -->
+                <div class="bg-slateDeep rounded-2xl border border-slate-800 p-4 sm:p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                    <div class="flex items-center gap-3.5">
+                        <div class="flex items-center -space-x-2">
+                            <span class="w-11 h-11 rounded-xl bg-slateCard border border-emeraldAccent/50 flex items-center justify-center text-2xl shadow">${myCiv.emblem}</span>
+                            <span class="w-11 h-11 rounded-xl bg-slateCard border border-crimsonAccent/50 flex items-center justify-center text-2xl shadow">${enemyCiv.emblem}</span>
+                        </div>
+                        <div>
+                            <div class="flex flex-wrap items-center gap-2">
+                                <span class="font-display font-bold text-base sm:text-lg text-white">${myCiv.name} vs ${enemyCiv.name}</span>
+                                <span class="px-2.5 py-0.5 rounded-full text-xs font-bold border ${verdictBadge}">${verdictLabel}</span>
+                            </div>
+                            <p class="text-xs sm:text-sm text-slate-300 mt-1">${verdictNote}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3 Cartes Clés du Briefing 30 Secondes -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+                    <!-- 1. Menace Principale & Timing Critique Adverse -->
+                    <div class="bg-slateDeep/90 rounded-2xl border border-crimsonAccent/40 p-5 space-y-3.5">
+                        <div class="flex items-center justify-between">
+                            <span class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-crimsonAccent">
+                                <i data-lucide="flame" class="w-4 h-4"></i>
+                                <span>1. Menace Adverse</span>
+                            </span>
+                            <span class="px-2 py-0.5 rounded bg-crimsonAccent/15 text-crimsonAccent text-[11px] font-mono font-bold">
+                                ${enemyTiming.threatWindow}
+                            </span>
+                        </div>
+                        <h4 class="font-display font-bold text-base text-white">${enemyTiming.archetype}</h4>
+                        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                            ${enemyTiming.primaryThreat}
+                        </p>
+                        <div class="pt-2 border-t border-slate-800/80 text-xs text-slate-400">
+                            <span class="font-semibold text-sky-300">À scouter à 3:30 :</span> ${enemyTiming.events[0] ? enemyTiming.events[0].title : "Vérifier l'or et la pierre ennemis."}
+                        </div>
+                    </div>
+
+                    <!-- 2. Plan de Jeu & Réponse Recommandée -->
+                    <div class="bg-slateDeep/90 rounded-2xl border border-royalGold/40 p-5 space-y-3.5">
+                        <div class="flex items-center justify-between">
+                            <span class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-royalGoldLight">
+                                <i data-lucide="compass" class="w-4 h-4 text-royalGold"></i>
+                                <span>2. Réponse Recommandée</span>
+                            </span>
+                            <span class="px-2 py-0.5 rounded bg-royalGold/15 text-royalGoldLight text-[11px] font-semibold">
+                                ${myCiv.name}
+                            </span>
+                        </div>
+                        <div class="space-y-2 text-xs sm:text-sm">
+                            <div class="p-2.5 rounded-lg bg-slateCard border border-slate-800">
+                                <span class="text-[11px] font-bold uppercase text-royalGold block">Transition Âge II / III conseillée</span>
+                                <span class="text-slate-200 font-medium">${recommendedAge2 ? recommendedAge2.name : "Monument standard"} → ${recommendedAge3 ? recommendedAge3.name : "Âge III"}</span>
+                            </div>
+                            <p class="text-slate-300 leading-relaxed">
+                                <span class="font-semibold text-white">Composition :</span> ${enemyTiming.recommendedCounterPlan.unitPriority}
+                            </p>
+                            <p class="text-slate-300 leading-relaxed">
+                                <span class="font-semibold text-amberAccent">Forge prioritaire :</span> ${enemyTiming.recommendedCounterPlan.upgradePriority}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- 3. Condition de Victoire & Fenêtre d'Action -->
+                    <div class="bg-slateDeep/90 rounded-2xl border border-emeraldAccent/40 p-5 space-y-3.5">
+                        <div class="flex items-center justify-between">
+                            <span class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-emeraldAccent">
+                                <i data-lucide="trophy" class="w-4 h-4"></i>
+                                <span>3. Condition de Victoire</span>
+                            </span>
+                            <span class="px-2 py-0.5 rounded bg-emeraldAccent/15 text-emeraldAccent text-[11px] font-mono font-bold">
+                                ${myTiming.threatWindow}
+                            </span>
+                        </div>
+                        <h4 class="font-display font-bold text-base text-white">${myTiming.archetype}</h4>
+                        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                            ${enemyTiming.recommendedCounterPlan.winCondition}
+                        </p>
+                        <div class="pt-2 border-t border-slate-800/80 text-xs text-slate-400">
+                            <span class="font-semibold text-emeraldAccent">Votre ouverture :</span> ${myCiv.buildOrder.title}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comparatif Visuel des Timings Côte à Côte (Vous vs Adversaire) -->
+                <div class="bg-slateDeep/90 rounded-2xl border border-slate-800 p-5 space-y-4">
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <h4 class="font-display text-base font-bold text-white flex items-center gap-2">
+                            <i data-lucide="activity" class="w-4 h-4 text-royalGold"></i>
+                            <span>Frise Comparative des Fenêtres de Puissance (0:00 → 20:00+)</span>
+                        </h4>
+                        <div class="flex items-center gap-3 text-[11px]">
+                            <span class="text-emeraldAccent font-semibold">⚡ Pic de Puissance</span>
+                            <span class="text-crimsonAccent font-semibold">⚠️ Vulnérabilité</span>
+                            <span class="text-sky-300 font-semibold">👁️ Scouting</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <!-- Ligne Ma Civ -->
+                        <div class="space-y-1.5">
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="font-bold text-emeraldAccent">${myCiv.emblem} VOUS : ${myCiv.name}</span>
+                                <span class="text-slate-400">Vos fenêtres fortes : ${myTiming.threatWindow}</span>
+                            </div>
+                            <div class="relative h-8 bg-slateCard rounded-lg border border-slate-800 overflow-hidden flex items-center">
+                                ${myTiming.events.map(ev => {
+                                    const bg = ev.type === "spike" ? "bg-emeraldAccent/85 border-emeraldAccent" : ev.type === "vuln" ? "bg-crimsonAccent/85 border-crimsonAccent" : "bg-sky-500/85 border-sky-400";
+                                    return `<div style="left: ${ev.startPct}%; width: ${ev.widthPct}%;" title="${ev.label} : ${ev.title}" class="absolute h-5 rounded border ${bg} flex items-center justify-center px-1 text-[10px] font-bold text-slateDeep truncate">${ev.time}</div>`;
+                                }).join("")}
+                            </div>
+                        </div>
+
+                        <!-- Ligne Adversaire -->
+                        <div class="space-y-1.5">
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="font-bold text-crimsonAccent">${enemyCiv.emblem} ADVERSAIRE : ${enemyCiv.name}</span>
+                                <span class="text-slate-400">Ses fenêtres fortes : ${enemyTiming.threatWindow}</span>
+                            </div>
+                            <div class="relative h-8 bg-slateCard rounded-lg border border-slate-800 overflow-hidden flex items-center">
+                                ${enemyTiming.events.map(ev => {
+                                    const bg = ev.type === "spike" ? "bg-emeraldAccent/85 border-emeraldAccent" : ev.type === "vuln" ? "bg-crimsonAccent/85 border-crimsonAccent" : "bg-sky-500/85 border-sky-400";
+                                    return `<div style="left: ${ev.startPct}%; width: ${ev.widthPct}%;" title="${ev.label} : ${ev.title}" class="absolute h-5 rounded border ${bg} flex items-center justify-center px-1 text-[10px] font-bold text-slateDeep truncate">${ev.time}</div>`;
+                                }).join("")}
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between text-[11px] font-mono text-slate-500 pt-1">
+                            <span>0:00</span>
+                            <span>4:00 (Âge II)</span>
+                            <span>7:00 (Âge III)</span>
+                            <span>10:00</span>
+                            <span>15:00 (Âge IV)</span>
+                            <span>20:00+</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            lucide.createIcons();
         }
 
         // Gestion de la Checklist Build Order
@@ -3936,6 +4050,26 @@
                     compareModal.classList.add("hidden");
                     compareModal.classList.remove("flex");
                 }
+            });
+
+            // Modal Écran de Chargement (Ma Civ vs Adversaire)
+            const lsModal = document.getElementById("loading-screen-modal");
+            document.getElementById("btn-open-loading-screen").addEventListener("click", () => {
+                openLoadingScreenModal(state.selectedCivId);
+            });
+            document.getElementById("btn-close-loading-screen").addEventListener("click", closeLoadingScreenModal);
+            lsModal.addEventListener("click", (e) => {
+                if (e.target === lsModal) {
+                    closeLoadingScreenModal();
+                }
+            });
+            document.getElementById("btn-swap-ls-civs").addEventListener("click", () => {
+                const temp = state.loadingScreenMyCiv;
+                state.loadingScreenMyCiv = state.loadingScreenEnemyCiv;
+                state.loadingScreenEnemyCiv = temp;
+                document.getElementById("ls-select-my-civ").value = state.loadingScreenMyCiv;
+                document.getElementById("ls-select-enemy-civ").value = state.loadingScreenEnemyCiv;
+                renderLoadingScreenBriefing();
             });
         }
     </script>
