@@ -1,36 +1,37 @@
-# HelpMyEmperor — Codex & Guide Tactique *Age of Empires IV*
+# ⚔️ HelpMyEmperor — *Age of Empires IV* Codex & Tactical Guide
 
-**HelpMyEmperor** est une application web monopage (SPA) conçue pour aider les joueurs d'*Age of Empires IV* à préparer leurs parties, comprendre les mécaniques complexes et prendre les bonnes décisions stratégiques en quelques secondes.
-
----
-
-## Fonctionnalités principales
-
-* **Couverture des 25 civilisations :** Analyse détaillée des forces, faiblesses, mécaniques uniques, cartes favorables et compositions d'unités pour l'ensemble des civilisations du jeu de base et des extensions.
-* **Mode Écran de Chargement (`Ma Civ vs Adversaire`) :** Sélectionnez votre civilisation et celle de votre adversaire pour obtenir un briefing rapide :
-  * Verdict du duel (*Favorable*, *Équilibré*, *Difficile* ou *Miroir*).
-  * Menace principale de l'adversaire, repère de scouting et timing critique.
-  * Réponse recommandée (transition d'Âge, unités clés, priorité à la forge) et condition de victoire.
-* **Frise des Timings Critiques & Power Spikes (`0:00 → 20:00+`) :** Visualisation des pics de puissance, fenêtres de vulnérabilité et points de contrôle clés au fil de la partie.
-* **Passages d'Âge & Planificateur de Synergie :** Fiches comparatives des choix d'Âge (monuments, commanderies de l'Ordre du Temple, ailes modulaires, dynasties chinoises / Zhu Xi, etc.) avec composition d'un plan de partie exportable en un clic.
-* **Build Orders & Chronologie :** Repères d'ouverture et séquences clés pour structurer le début de partie.
+**HelpMyEmperor** is a fast, single-page web application (SPA) built to help *Age of Empires IV* players prepare matches faster, untangle complex age-up mechanics, and make sharp tactical calls under pressure.
 
 ---
 
-## Architecture & Stack technique
+## ✨ Key Features
 
-Le projet repose sur une architecture légère et autonome, sans dépendance serveur complexe :
-
-* **Interface & Mise en page :** HTML5, Tailwind CSS, esthétique sobre et technique pensée pour une lecture rapide.
-* **Logique & Données :** JavaScript natif (données structurées des civilisations, rendus dynamiques des onglets, du comparateur d'Âges et du mode duel).
-* **Déploiement :** Hébergement statique compatible **GitHub Pages**.
+* 🛡️ **All 25 Civilizations Covered:** Deep dives into strengths, weaknesses, unique mechanics, favored maps, and army compositions across the base game and expansions.
+* ⚡ **Loading Screen Mode (`My Civ vs. Enemy`):** Pick your civilization and your opponent's to get a 30-second match briefing:
+  * 🎯 Matchup verdict (*Favorable*, *Even*, *Tough*, or *Mirror*).
+  * 🚨 Enemy primary threat, scouting cue, and critical timing.
+  * 🛠️ Recommended counter response (Age II/III choice, unit composition, and priority blacksmith tech).
+  * 🏆 Win condition and side-by-side timing comparison.
+* 📈 **Critical Timings & Power Spikes Timeline (`0:00 → 20:00+`):** Spot power spikes, vulnerability windows, and key checkpoints across every stage of the match.
+* 🏛️ **Age Ups & Synergy Planner:** Compare age-up options side by side—landmarks, Order of the Dragon/Templar commanderies, Abbasid/Ayyubid wings, Chinese/Zhu Xi dynasties, and more—and build an exportable game plan in one click.
+* 📜 **Build Orders & Match Chronology:** Clear opening milestones and early-game sequences to keep your macro clean.
 
 ---
 
-## Utilisation & Déploiement
+## 🧩 Tech Stack & Architecture
 
-### En local
-1. Clonez le dépôt :
+Designed as a lightweight static app with zero heavy backend requirements:
+
+* **UI & Styling:** HTML5 and Tailwind CSS with a clean, technical aesthetic built for fast scanning.
+* **Logic & Data:** Vanilla JavaScript powering civilization datasets, matchup briefings, age-up comparisons, and synergy planning.
+* **Hosting:** Ready out of the box for **GitHub Pages**.
+
+---
+
+## 🚀 Quick Start & Deployment
+
+### Run Locally
+1. Clone the repository:
    ```bash
    git clone git@github.com:gaetan-laplace/Sector2401.git
    cd Sector2401
